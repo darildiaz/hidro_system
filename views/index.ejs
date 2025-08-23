@@ -1,0 +1,770 @@
+<!-- Dashboard Principal -->
+<div class="row">
+    <!-- Título de la página -->
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 text-success">
+                <i class="bi bi-droplet-fill me-2"></i>
+                Dashboard del Sistema
+            </h1>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-success" id="refreshData">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+                </button>
+                <button class="btn btn-success" id="testSystem">
+                    <i class="bi bi-play-circle me-1"></i>Probar Sistema
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estado del Sistema -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card border-success h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-thermometer-half text-danger fs-1"></i>
+                <h5 class="card-title mt-2">Temperatura</h5>
+                <h3 class="text-danger" id="currentTemp">--°C</h3>
+                <small class="text-muted">Última lectura: <span id="tempTime">--</span></small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-info h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-droplet-fill text-info fs-1"></i>
+                <h5 class="card-title mt-2">Humedad</h5>
+                <h3 class="text-info" id="currentHumidity">--%</h3>
+                <small class="text-muted">Última lectura: <span id="humidityTime">--</span></small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-warning h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-clock text-warning fs-1"></i>
+                <h5 class="card-title mt-2">Programador</h5>
+                <h3 class="text-warning" id="schedulerStatus">--</h3>
+                <small class="text-muted">Horarios activos: <span id="activeSchedules">--</span></small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card border-primary h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-gear text-primary fs-1"></i>
+                <h5 class="card-title mt-2">Sistema</h5>
+                <h3 class="text-primary" id="systemStatus">--</h3>
+                <small class="text-muted">Uptime: <span id="systemUptime">--</span></small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Control de Relés -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-lightning-charge me-2"></i>
+                    Control de Relés
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Relé 1 -->
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100" id="rele1Card">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">Relé 1</h6>
+                                <div class="form-check form-switch d-flex justify-content-center mb-3">
+                                    <input class="form-check-input" type="checkbox" id="rele1Switch" style="transform: scale(1.5);">
+                                </div>
+                                <p class="card-text">
+                                    <small class="text-muted">GPIO 2</small><br>
+                                    <span class="badge bg-secondary" id="rele1Status">Desconectado</span>
+                                </p>
+                                <div class="btn-group btn-group-sm w-100">
+                                    <button class="btn btn-outline-success" onclick="activateReleTimed(1)">
+                                        <i class="bi bi-clock me-1"></i>5min
+                                    </button>
+                                    <button class="btn btn-outline-warning" onclick="activateReleTimed(1, 300)">
+                                        <i class="bi bi-clock me-1"></i>15min
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Relé 2 -->
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100" id="rele2Card">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">Relé 2</h6>
+                                <div class="form-check form-switch d-flex justify-content-center mb-3">
+                                    <input class="form-check-input" type="checkbox" id="rele2Switch" style="transform: scale(1.5);">
+                                </div>
+                                <p class="card-text">
+                                    <small class="text-muted">GPIO 3</small><br>
+                                    <span class="badge bg-secondary" id="rele2Status">Desconectado</span>
+                                </p>
+                                <div class="btn-group btn-group-sm w-100">
+                                    <button class="btn btn-outline-success" onclick="activateReleTimed(2)">
+                                        <i class="bi bi-clock me-1"></i>5min
+                                    </button>
+                                    <button class="btn btn-outline-warning" onclick="activateReleTimed(2, 300)">
+                                        <i class="bi bi-clock me-1"></i>15min
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Relé 3 -->
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100" id="rele3Card">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">Relé 3</h6>
+                                <div class="form-check form-switch d-flex justify-content-center mb-3">
+                                    <input class="form-check-input" type="checkbox" id="rele3Switch" style="transform: scale(1.5);">
+                                </div>
+                                <p class="card-text">
+                                    <small class="text-muted">GPIO 4</small><br>
+                                    <span class="badge bg-secondary" id="rele3Status">Desconectado</span>
+                                </p>
+                                <div class="btn-group btn-group-sm w-100">
+                                    <button class="btn btn-outline-success" onclick="activateReleTimed(3)">
+                                        <i class="bi bi-clock me-1"></i>5min
+                                    </button>
+                                    <button class="btn btn-outline-warning" onclick="activateReleTimed(3, 300)">
+                                        <i class="bi bi-clock me-1"></i>15min
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Relé 4 -->
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100" id="rele4Card">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">Relé 4</h6>
+                                <div class="form-check form-switch d-flex justify-content-center mb-3">
+                                    <input class="form-check-input" type="checkbox" id="rele4Switch" style="transform: scale(1.5);">
+                                </div>
+                                <p class="card-text">
+                                    <small class="text-muted">GPIO 18</small><br>
+                                    <span class="badge bg-secondary" id="rele4Status">Desconectado</span>
+                                </p>
+                                <div class="btn-group btn-group-sm w-100">
+                                    <button class="btn btn-outline-success" onclick="activateReleTimed(4)">
+                                        <i class="bi bi-clock me-1"></i>5min
+                                    </button>
+                                    <button class="btn btn-outline-warning" onclick="activateReleTimed(4, 300)">
+                                        <i class="bi bi-clock me-1"></i>15min
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Controles masivos -->
+                <div class="row mt-3">
+                    <div class="col-12 text-center">
+                        <div class="btn-group">
+                            <button class="btn btn-success" onclick="activateAllRele()">
+                                <i class="bi bi-play-fill me-1"></i>Activar Todos
+                            </button>
+                            <button class="btn btn-danger" onclick="deactivateAllRele()">
+                                <i class="bi bi-stop-fill me-1"></i>Desactivar Todos
+                            </button>
+                            <button class="btn btn-warning" onclick="toggleAllRele()">
+                                <i class="bi bi-arrow-repeat me-1"></i>Alternar Todos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráficos de Sensores -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h6 class="mb-0">
+                    <i class="bi bi-thermometer-half me-2"></i>
+                    Temperatura en Tiempo Real
+                </h6>
+            </div>
+            <div class="card-body">
+                <canvas id="temperatureChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">
+                    <i class="bi bi-droplet-fill me-2"></i>
+                    Humedad en Tiempo Real
+                </h6>
+            </div>
+            <div class="card-body">
+                <canvas id="humidityChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Actividad Reciente -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h6 class="mb-0">
+                    <i class="bi bi-activity me-2"></i>
+                    Actividad Reciente del Sistema
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Hora</th>
+                                <th>Evento</th>
+                                <th>Detalles</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityTable">
+                            <!-- Se llena dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h6 class="mb-0">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Alertas del Sistema
+                </h6>
+            </div>
+            <div class="card-body">
+                <div id="alertsContainer">
+                    <p class="text-muted text-center">No hay alertas activas</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Información del Sistema -->
+        <div class="card mt-3">
+            <div class="card-header bg-secondary text-white">
+                <h6 class="mb-0">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Información del Sistema
+                </h6>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <strong>Versión:</strong> 1.0.0
+                    </li>
+                    <li class="mb-2">
+                        <strong>Estado:</strong> 
+                        <span class="badge bg-success">Operativo</span>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Última actualización:</strong> 
+                        <span id="lastUpdate">--</span>
+                    </li>
+                    <li class="mb-2">
+                        <strong>Horarios activos:</strong> 
+                        <span id="totalSchedules">--</span>
+                    </li>
+                    <li class="mb-0">
+                        <strong>Condiciones activas:</strong> 
+                        <span id="totalConditions">--</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para activación temporal -->
+<div class="modal fade" id="timedActivationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Activación Temporal de Relé</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="timedActivationForm">
+                    <div class="mb-3">
+                        <label for="releSelect" class="form-label">Relé</label>
+                        <select class="form-select" id="releSelect" required>
+                            <option value="">Seleccionar relé...</option>
+                            <option value="1">Relé 1 (GPIO 2)</option>
+                            <option value="2">Relé 2 (GPIO 3)</option>
+                            <option value="3">Relé 3 (GPIO 4)</option>
+                            <option value="4">Relé 4 (GPIO 18)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="duration" class="form-label">Duración (segundos)</label>
+                        <input type="number" class="form-control" id="duration" min="1" max="3600" value="300" required>
+                        <div class="form-text">Máximo 1 hora (3600 segundos)</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reason" class="form-label">Razón (opcional)</label>
+                        <input type="text" class="form-control" id="reason" placeholder="Activación manual temporal">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" id="activateTimed">Activar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Variables globales
+let socket;
+let temperatureChart, humidityChart;
+let temperatureData = [];
+let humidityData = [];
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSocket();
+    initializeCharts();
+    setupEventListeners();
+    loadInitialData();
+});
+
+// Inicializar Socket.IO
+function initializeSocket() {
+    socket = io();
+    
+    socket.on('sensor_data', function(data) {
+        updateSensorDisplay(data);
+        updateCharts(data);
+    });
+    
+    socket.on('rele_states', function(states) {
+        updateReleStates(states);
+    });
+    
+    socket.on('connect', function() {
+        console.log('Conectado al servidor');
+        showNotification('Conectado al sistema', 'success');
+    });
+    
+    socket.on('disconnect', function() {
+        console.log('Desconectado del servidor');
+        showNotification('Desconectado del sistema', 'warning');
+    });
+}
+
+// Inicializar gráficos
+function initializeCharts() {
+    const tempCtx = document.getElementById('temperatureChart').getContext('2d');
+    const humidityCtx = document.getElementById('humidityChart').getContext('2d');
+    
+    temperatureChart = new Chart(tempCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Temperatura (°C)',
+                data: [],
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    min: 0,
+                    max: 50
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+    
+    humidityChart = new Chart(humidityCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Humedad (%)',
+                data: [],
+                borderColor: 'rgb(54, 162, 235)',
+                backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+// Configurar event listeners
+function setupEventListeners() {
+    // Switches de relés
+    document.getElementById('rele1Switch').addEventListener('change', function() {
+        controlRele(1, this.checked);
+    });
+    
+    document.getElementById('rele2Switch').addEventListener('change', function() {
+        controlRele(2, this.checked);
+    });
+    
+    document.getElementById('rele3Switch').addEventListener('change', function() {
+        controlRele(3, this.checked);
+    });
+    
+    document.getElementById('rele4Switch').addEventListener('change', function() {
+        controlRele(4, this.checked);
+    });
+    
+    // Botones de control
+    document.getElementById('refreshData').addEventListener('click', loadInitialData);
+    document.getElementById('testSystem').addEventListener('click', testSystem);
+    document.getElementById('activateTimed').addEventListener('click', activateSelectedRele);
+}
+
+// Cargar datos iniciales
+async function loadInitialData() {
+    try {
+        // Cargar estado de relés
+        const releResponse = await fetch('/api/rele/status');
+        const releData = await releResponse.json();
+        if (releData.success) {
+            updateReleStates(releData.releStates);
+        }
+        
+        // Cargar datos de sensores
+        const sensorResponse = await fetch('/api/sensors/current');
+        const sensorData = await sensorResponse.json();
+        if (sensorData.success) {
+            updateSensorDisplay(sensorData.data);
+        }
+        
+        // Cargar estado del sistema
+        const systemResponse = await fetch('/api/system/status');
+        const systemData = await systemResponse.json();
+        if (systemData.success) {
+            updateSystemStatus(systemData.status);
+        }
+        
+        // Cargar logs recientes
+        const logsResponse = await fetch('/api/logs?limit=10');
+        const logsData = await logsResponse.json();
+        if (logsData.success) {
+            updateActivityTable(logsData.logs);
+        }
+        
+    } catch (error) {
+        console.error('Error cargando datos iniciales:', error);
+        showNotification('Error cargando datos', 'error');
+    }
+}
+
+// Actualizar display de sensores
+function updateSensorDisplay(data) {
+    if (data.temperature !== undefined) {
+        document.getElementById('currentTemp').textContent = `${data.temperature}°C`;
+        document.getElementById('tempTime').textContent = new Date().toLocaleTimeString();
+    }
+    
+    if (data.humidity !== undefined) {
+        document.getElementById('currentHumidity').textContent = `${data.humidity}%`;
+        document.getElementById('humidityTime').textContent = new Date().toLocaleTimeString();
+    }
+}
+
+// Actualizar gráficos
+function updateCharts(data) {
+    const now = new Date().toLocaleTimeString();
+    
+    // Actualizar gráfico de temperatura
+    if (data.temperature !== undefined) {
+        temperatureData.push({ x: now, y: data.temperature });
+        if (temperatureData.length > 20) temperatureData.shift();
+        
+        temperatureChart.data.labels = temperatureData.map(d => d.x);
+        temperatureChart.data.datasets[0].data = temperatureData.map(d => d.y);
+        temperatureChart.update('none');
+    }
+    
+    // Actualizar gráfico de humedad
+    if (data.humidity !== undefined) {
+        humidityData.push({ x: now, y: data.humidity });
+        if (humidityData.length > 20) humidityData.shift();
+        
+        humidityChart.data.labels = humidityData.map(d => d.x);
+        humidityChart.data.datasets[0].data = humidityData.map(d => d.y);
+        humidityChart.update('none');
+    }
+}
+
+// Actualizar estado de relés
+function updateReleStates(states) {
+    states.forEach(state => {
+        const switchId = `rele${state.releId}Switch`;
+        const statusId = `rele${state.releId}Status`;
+        const cardId = `rele${state.releId}Card`;
+        
+        const switchElement = document.getElementById(switchId);
+        const statusElement = document.getElementById(statusId);
+        const cardElement = document.getElementById(cardId);
+        
+        if (switchElement && statusElement && cardElement) {
+            switchElement.checked = state.state;
+            
+            if (state.state) {
+                statusElement.textContent = 'Activado';
+                statusElement.className = 'badge bg-success';
+                cardElement.classList.add('border-success');
+                cardElement.classList.remove('border-secondary');
+            } else {
+                statusElement.textContent = 'Desconectado';
+                statusElement.className = 'badge bg-secondary';
+                cardElement.classList.remove('border-success');
+                cardElement.classList.add('border-secondary');
+            }
+        }
+    });
+}
+
+// Controlar relé
+async function controlRele(releId, state) {
+    try {
+        const response = await fetch('/api/rele/control', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                releId: releId,
+                state: state,
+                reason: state ? 'Activación manual' : 'Desactivación manual'
+            })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            showNotification(data.message, 'success');
+        } else {
+            showNotification('Error controlando relé', 'error');
+        }
+    } catch (error) {
+        console.error('Error controlando relé:', error);
+        showNotification('Error de conexión', 'error');
+    }
+}
+
+// Activar relé por tiempo
+function activateReleTimed(releId, duration = 300) {
+    const modal = new bootstrap.Modal(document.getElementById('timedActivationModal'));
+    document.getElementById('releSelect').value = releId;
+    document.getElementById('duration').value = duration;
+    modal.show();
+}
+
+// Activar relé seleccionado
+async function activateSelectedRele() {
+    const releId = document.getElementById('releSelect').value;
+    const duration = document.getElementById('duration').value;
+    const reason = document.getElementById('reason').value || 'Activación temporal manual';
+    
+    if (!releId || !duration) {
+        showNotification('Por favor complete todos los campos', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/rele/timed', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                releId: parseInt(releId),
+                duration: parseInt(duration),
+                reason: reason
+            })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            showNotification(data.message, 'success');
+            bootstrap.Modal.getInstance(document.getElementById('timedActivationModal')).hide();
+        } else {
+            showNotification('Error activando relé', 'error');
+        }
+    } catch (error) {
+        console.error('Error activando relé:', error);
+        showNotification('Error de conexión', 'error');
+    }
+}
+
+// Activar todos los relés
+async function activateAllRele() {
+    if (confirm('¿Está seguro de que desea activar todos los relés?')) {
+        for (let i = 1; i <= 4; i++) {
+            await controlRele(i, true);
+        }
+    }
+}
+
+// Desactivar todos los relés
+async function deactivateAllRele() {
+    if (confirm('¿Está seguro de que desea desactivar todos los relés?')) {
+        for (let i = 1; i <= 4; i++) {
+            await controlRele(i, false);
+        }
+    }
+}
+
+// Alternar todos los relés
+async function toggleAllRele() {
+    if (confirm('¿Está seguro de que desea alternar el estado de todos los relés?')) {
+        for (let i = 1; i <= 4; i++) {
+            const switchElement = document.getElementById(`rele${i}Switch`);
+            if (switchElement) {
+                await controlRele(i, !switchElement.checked);
+            }
+        }
+    }
+}
+
+// Probar sistema
+async function testSystem() {
+    try {
+        const response = await fetch('/api/system/control', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'test_gpio'
+            })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            showNotification('Prueba del sistema completada', 'success');
+            console.log('Resultados de la prueba:', data.testResults);
+        } else {
+            showNotification('Error en la prueba del sistema', 'error');
+        }
+    } catch (error) {
+        console.error('Error probando sistema:', error);
+        showNotification('Error de conexión', 'error');
+    }
+}
+
+// Actualizar estado del sistema
+function updateSystemStatus(status) {
+    document.getElementById('systemStatus').textContent = status.gpio.gpioInitialized ? 'Operativo' : 'Error';
+    document.getElementById('systemUptime').textContent = formatUptime(status.uptime);
+    document.getElementById('activeSchedules').textContent = status.scheduler.activeSchedules;
+    document.getElementById('totalSchedules').textContent = status.scheduler.activeSchedules;
+    document.getElementById('totalConditions').textContent = status.scheduler.activeConditions;
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+}
+
+// Actualizar tabla de actividad
+function updateActivityTable(logs) {
+    const tbody = document.getElementById('activityTable');
+    tbody.innerHTML = '';
+    
+    logs.forEach(log => {
+        const row = document.createElement('tr');
+        const time = new Date(log.timestamp).toLocaleTimeString();
+        const levelClass = getLevelClass(log.level);
+        
+        row.innerHTML = `
+            <td><small>${time}</small></td>
+            <td><span class="badge ${levelClass}">${log.level}</span></td>
+            <td><small>${log.message}</small></td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+}
+
+// Obtener clase CSS para nivel de log
+function getLevelClass(level) {
+    switch (level.toLowerCase()) {
+        case 'error': return 'bg-danger';
+        case 'warn': return 'bg-warning';
+        case 'info': return 'bg-info';
+        case 'debug': return 'bg-secondary';
+        default: return 'bg-secondary';
+    }
+}
+
+// Formatear uptime
+function formatUptime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
+}
+
+// Mostrar notificación
+function showNotification(message, type = 'info') {
+    const toast = document.getElementById('notificationToast');
+    const toastMessage = document.getElementById('toastMessage');
+    
+    toastMessage.textContent = message;
+    
+    // Cambiar clase del toast según el tipo
+    toast.className = `toast toast-${type}`;
+    
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+}
+</script> 

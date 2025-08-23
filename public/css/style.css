@@ -1,0 +1,440 @@
+/* 
+ * Estilos Personalizados para Sistema de Hidroponía Automatizado
+ * Ing. Daril Díaz - 2024
+ */
+
+:root {
+    --primary-green: #198754;
+    --secondary-green: #20c997;
+    --light-green: #d1e7dd;
+    --dark-green: #0f5132;
+    --accent-blue: #0d6efd;
+    --accent-orange: #fd7e14;
+    --accent-red: #dc3545;
+    --accent-yellow: #ffc107;
+    --text-dark: #212529;
+    --text-muted: #6c757d;
+    --bg-light: #f8f9fa;
+    --border-color: #dee2e6;
+}
+
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+
+/* Navbar personalizado */
+.navbar-dark.bg-success {
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green)) !important;
+    box-shadow: 0 2px 10px rgba(25, 135, 84, 0.3);
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    transform: translateY(-2px);
+    color: var(--light-green) !important;
+}
+
+/* Cards personalizadas */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    border-bottom: none;
+    font-weight: 600;
+    border-radius: 15px 15px 0 0 !important;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Estados de relés */
+.card[id*="rele"] {
+    transition: all 0.3s ease;
+}
+
+.card[id*="rele"].border-success {
+    border-color: var(--primary-green) !important;
+    box-shadow: 0 4px 15px rgba(25, 135, 84, 0.2);
+}
+
+.card[id*="rele"].border-secondary {
+    border-color: var(--border-color) !important;
+}
+
+/* Switches personalizados */
+.form-check-input:checked {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.form-check-input:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+/* Botones personalizados */
+.btn {
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+}
+
+.btn-outline-success {
+    border-color: var(--primary-green);
+    color: var(--primary-green);
+}
+
+.btn-outline-success:hover {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.btn-group .btn {
+    border-radius: 8px;
+    margin: 0 2px;
+}
+
+/* Gráficos */
+canvas {
+    border-radius: 10px;
+}
+
+/* Tablas */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: var(--light-green);
+    border-bottom: 2px solid var(--primary-green);
+    font-weight: 600;
+    color: var(--dark-green);
+}
+
+.table tbody tr:hover {
+    background-color: rgba(25, 135, 84, 0.05);
+}
+
+/* Badges personalizados */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.5em 0.75em;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.badge.bg-success {
+    background-color: var(--primary-green) !important;
+}
+
+.badge.bg-secondary {
+    background-color: var(--text-muted) !important;
+}
+
+/* Breadcrumb personalizado */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: var(--text-muted);
+}
+
+.breadcrumb-item.active {
+    color: var(--primary-green);
+    font-weight: 600;
+}
+
+/* Footer personalizado */
+footer {
+    background: linear-gradient(135deg, var(--light-green), #ffffff);
+    border-top: 2px solid var(--primary-green);
+}
+
+/* Modales personalizados */
+.modal-content {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+    color: white;
+    border-radius: 15px 15px 0 0;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+/* Toast personalizado */
+.toast {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.toast-header {
+    background-color: var(--light-green);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Formularios personalizados */
+.form-control, .form-select {
+    border-radius: 10px;
+    border: 2px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.form-text {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* Alertas personalizadas */
+.alert {
+    border-radius: 10px;
+    border: none;
+    font-weight: 500;
+}
+
+.alert-success {
+    background-color: var(--light-green);
+    color: var(--dark-green);
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* Iconos personalizados */
+.bi {
+    transition: all 0.3s ease;
+}
+
+.card:hover .bi {
+    transform: scale(1.1);
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-group .btn {
+        margin: 2px 0;
+        border-radius: 8px;
+    }
+    
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .col-md-3 {
+        margin-bottom: 1rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+}
+
+/* Estados especiales */
+.system-offline {
+    background-color: var(--accent-red) !important;
+}
+
+.system-warning {
+    background-color: var(--accent-yellow) !important;
+}
+
+.system-online {
+    background-color: var(--primary-green) !important;
+}
+
+/* Efectos de hover para relés */
+.card[id*="rele"]:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Indicadores de estado */
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+}
+
+.status-indicator.online {
+    background-color: var(--primary-green);
+}
+
+.status-indicator.offline {
+    background-color: var(--accent-red);
+}
+
+.status-indicator.warning {
+    background-color: var(--accent-yellow);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(25, 135, 84, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0);
+    }
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-green);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-green);
+}
+
+/* Selección de texto */
+::selection {
+    background-color: var(--light-green);
+    color: var(--dark-green);
+}
+
+/* Enfoque para accesibilidad */
+.btn:focus,
+.form-control:focus,
+.form-select:focus {
+    outline: 2px solid var(--primary-green);
+    outline-offset: 2px;
+}
+
+/* Estados de carga */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid var(--primary-green);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+} 
