@@ -1,42 +1,37 @@
+#!/usr/bin/env node
+
 /**
- * Aplicación Principal del Sistema de Hidroponía Automatizado
- * Servidor Express con Socket.IO para control en tiempo real
+ * Aplicación Principal - Modo Desarrollo
+ * Sistema de Hidroponía Automatizado
+ * Configuración de seguridad relajada para desarrollo
  * Ing. Daril Díaz - 2024
  */
 
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const bodyParser = require('body-parser');
 const path = require('path');
 const helmet = require('helmet');
 const compression = require('compression');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 // Importar módulos del sistema
-const config = require('./config');
 const Database = require('./database');
 const GPIOController = require('./gpio_controller');
 const Scheduler = require('./scheduler');
+
+// Usar configuración de desarrollo
+const config = require('./config.development');
 
 // Crear aplicación Express
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-// Configurar middleware de seguridad
+// Configurar middleware de seguridad RELAJADO para desarrollo
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "/socket.io/"],
-      scriptSrcAttr: ["'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      fontSrc: ["'self'", "https://cdn.jsdelivr.net"],
-      connectSrc: ["'self'", "ws:", "wss:", "/socket.io/"]
-    }
-  },
+  contentSecurityPolicy: false, // Deshabilitar CSP estricto
   crossOriginEmbedderPolicy: false,
   crossOriginOpenerPolicy: false,
   crossOriginResourcePolicy: false
@@ -44,7 +39,10 @@ app.use(helmet({
 
 // Configurar middleware
 app.use(compression());
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  credentials: true
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -61,7 +59,7 @@ let database, gpioController, scheduler;
 // Función de inicialización del sistema
 async function initializeSystem() {
   try {
-    console.log('🌱 Inicializando Sistema de Hidroponía Automatizado...');
+    console.log('🌱 Inicializando Sistema de Hidroponía Automatizado (MODO DESARROLLO)...');
     
     // Inicializar base de datos
     database = new Database();
@@ -75,10 +73,10 @@ async function initializeSystem() {
     scheduler = new Scheduler();
     console.log('✅ Programador de horarios inicializado');
     
-    console.log('🚀 Sistema inicializado correctamente');
+    console.log('🚀 Sistema inicializado correctamente (MODO DESARROLLO)');
     
     // Guardar log de inicio
-    await database.saveSystemLog('info', 'Sistema iniciado correctamente', 'Main');
+    await database.saveSystemLog('info', 'Sistema iniciado en modo desarrollo', 'Main');
     
   } catch (error) {
     console.error('❌ Error inicializando sistema:', error);
@@ -96,7 +94,7 @@ app.get('/', async (req, res) => {
     const recentReadings = await database.getRecentSensorReadings(10);
     
     res.render('index', {
-      title: 'Sistema de Hidroponía Automatizado',
+      title: 'Sistema de Hidroponía Automatizado (DESARROLLO)',
       systemInfo,
       schedulerStatus,
       recentReadings
@@ -111,7 +109,7 @@ app.get('/programacion', async (req, res) => {
   try {
     const activeSchedules = await database.getActiveSchedules();
     res.render('programacion', {
-      title: 'Programación de Horarios',
+      title: 'Programación de Horarios (DESARROLLO)',
       schedules: activeSchedules
     });
   } catch (error) {
@@ -124,7 +122,7 @@ app.get('/condiciones', async (req, res) => {
   try {
     const activeConditions = await database.getActiveConditions();
     res.render('condiciones', {
-      title: 'Condiciones de Activación',
+      title: 'Condiciones de Activación (DESARROLLO)',
       conditions: activeConditions
     });
   } catch (error) {
@@ -135,15 +133,13 @@ app.get('/condiciones', async (req, res) => {
 
 app.get('/monitoreo', async (req, res) => {
   try {
-    const recentReadings = await database.getRecentSensorReadings(100);
+    const sensorReadings = await database.getSensorReadings(100);
     const systemLogs = await database.getSystemLogs(50);
-    const releStates = gpioController.getAllReleStates();
     
     res.render('monitoreo', {
-      title: 'Monitoreo del Sistema',
-      readings: recentReadings,
-      logs: systemLogs,
-      releStates
+      title: 'Monitoreo del Sistema (DESARROLLO)',
+      sensorReadings,
+      systemLogs
     });
   } catch (error) {
     console.error('Error renderizando monitoreo:', error);
@@ -153,13 +149,10 @@ app.get('/monitoreo', async (req, res) => {
 
 app.get('/configuracion', async (req, res) => {
   try {
-    const systemConfig = await database.getSystemConfig('system_name');
-    const gpioInfo = gpioController.getSystemInfo();
-    
+    const systemConfig = await database.getSystemConfig();
     res.render('configuracion', {
-      title: 'Configuración del Sistema',
-      systemConfig,
-      gpioInfo
+      title: 'Configuración del Sistema (DESARROLLO)',
+      config: systemConfig
     });
   } catch (error) {
     console.error('Error renderizando configuración:', error);
@@ -167,80 +160,26 @@ app.get('/configuracion', async (req, res) => {
   }
 });
 
-// API para control de relés
+// API REST para control de relés
 app.post('/api/rele/control', async (req, res) => {
   try {
     const { releId, state, reason } = req.body;
     
-    if (!releId || typeof state !== 'boolean') {
-      return res.status(400).json({ error: 'Parámetros inválidos' });
+    if (releId === undefined || state === undefined) {
+      return res.status(400).json({ success: false, error: 'Parámetros requeridos: releId, state' });
     }
     
-    const success = gpioController.controlRele(releId, state, reason);
+    const success = gpioController.controlRele(releId, state, reason || 'Control manual');
     
     if (success) {
       res.json({ success: true, message: `Relé ${releId} ${state ? 'activado' : 'desactivado'}` });
     } else {
-      res.status(500).json({ error: 'Error controlando relé' });
+      res.status(500).json({ success: false, error: 'Error controlando relé' });
     }
     
   } catch (error) {
     console.error('Error en API de control de relé:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// API para alternar relé
-app.post('/api/rele/toggle', async (req, res) => {
-  try {
-    const { releId } = req.body;
-    
-    if (!releId) {
-      return res.status(400).json({ error: 'ID de relé requerido' });
-    }
-    
-    const success = gpioController.toggleRele(releId);
-    
-    if (success) {
-      const newState = gpioController.getReleState(releId);
-      res.json({ success: true, state: newState });
-    } else {
-      res.status(500).json({ error: 'Error alternando relé' });
-    }
-    
-  } catch (error) {
-    console.error('Error en API de alternancia de relé:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// API para activación temporal
-app.post('/api/rele/timed', async (req, res) => {
-  try {
-    const { releId, duration, reason } = req.body;
-    
-    if (!releId || !duration) {
-      return res.status(400).json({ error: 'Parámetros inválidos' });
-    }
-    
-    gpioController.activateReleTimed(releId, duration, reason);
-    
-    res.json({ success: true, message: `Relé ${releId} activado por ${duration} segundos` });
-    
-  } catch (error) {
-    console.error('Error en API de activación temporal:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// API para obtener estado de relés
-app.get('/api/rele/status', (req, res) => {
-  try {
-    const releStates = gpioController.getAllReleStates();
-    res.json({ success: true, releStates });
-  } catch (error) {
-    console.error('Error obteniendo estado de relés:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -248,121 +187,68 @@ app.get('/api/rele/status', (req, res) => {
 app.get('/api/sensors/current', async (req, res) => {
   try {
     const sensorData = gpioController.readDHT11();
-    
-    if (sensorData) {
-      res.json({ success: true, data: sensorData });
-    } else {
-      res.status(500).json({ error: 'Error leyendo sensor' });
-    }
-    
+    res.json({ success: true, data: sensorData });
   } catch (error) {
-    console.error('Error obteniendo datos de sensores:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
-app.get('/api/sensors/history', async (req, res) => {
+// API para obtener estado de relés
+app.get('/api/rele/states', async (req, res) => {
   try {
-    const { limit = 100, startDate, endDate } = req.query;
-    
-    let readings;
-    if (startDate && endDate) {
-      readings = await database.getSensorReadingsByDateRange(startDate, endDate);
-    } else {
-      readings = await database.getRecentSensorReadings(parseInt(limit));
-    }
-    
-    res.json({ success: true, readings });
-    
+    const releStates = gpioController.getAllReleStates();
+    res.json({ success: true, data: releStates });
   } catch (error) {
-    console.error('Error obteniendo historial de sensores:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// API para programación de horarios
+// API para programación
 app.post('/api/schedule', async (req, res) => {
   try {
     const schedule = req.body;
+    const success = await database.saveSchedule(schedule);
     
-    if (!schedule.rele_id || !schedule.start_time || !schedule.end_time) {
-      return res.status(400).json({ error: 'Parámetros incompletos' });
+    if (success) {
+      scheduler.addSchedule(schedule);
+      res.json({ success: true, message: 'Horario guardado correctamente' });
+    } else {
+      res.status(500).json({ success: false, error: 'Error guardando horario' });
     }
     
-    const scheduleId = await database.saveSchedule(schedule);
-    
-    // Recargar programador
-    await scheduler.restart();
-    
-    res.json({ success: true, scheduleId });
-    
   } catch (error) {
-    console.error('Error guardando horario:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Error en API de horarios:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// API para condiciones de activación
+// API para condiciones
 app.post('/api/condition', async (req, res) => {
   try {
     const condition = req.body;
+    const success = await database.saveCondition(condition);
     
-    if (!condition.rele_id || !condition.condition_type || !condition.threshold_value) {
-      return res.status(400).json({ error: 'Parámetros incompletos' });
+    if (success) {
+      scheduler.addCondition(condition);
+      res.json({ success: true, message: 'Condición guardada correctamente' });
+    } else {
+      res.status(500).json({ success: false, error: 'Error guardando condición' });
     }
     
-    const conditionId = await database.saveCondition(condition);
-    
-    // Recargar programador
-    await scheduler.restart();
-    
-    res.json({ success: true, conditionId });
-    
   } catch (error) {
-    console.error('Error guardando condición:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Error en API de condiciones:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
 // API para logs del sistema
 app.get('/api/logs', async (req, res) => {
   try {
-    const { limit = 100, level } = req.query;
+    const { level, limit = 100 } = req.query;
     const logs = await database.getSystemLogs(parseInt(limit), level);
-    res.json({ success: true, logs });
+    res.json({ success: true, data: logs });
   } catch (error) {
-    console.error('Error obteniendo logs:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// API para respaldo manual
-app.post('/api/backup', async (req, res) => {
-  try {
-    const backupPath = await database.createBackup();
-    res.json({ success: true, backupPath });
-  } catch (error) {
-    console.error('Error creando respaldo:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// API para estado del sistema
-app.get('/api/system/status', (req, res) => {
-  try {
-    const status = {
-      gpio: gpioController.getSystemInfo(),
-      scheduler: scheduler.getStatus(),
-      uptime: process.uptime(),
-      memory: process.memoryUsage(),
-      timestamp: new Date().toISOString()
-    };
-    
-    res.json({ success: true, status });
-    
-  } catch (error) {
-    console.error('Error obteniendo estado del sistema:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -372,28 +258,28 @@ app.post('/api/system/control', async (req, res) => {
     const { action } = req.body;
     
     switch (action) {
-      case 'restart_scheduler':
-        await scheduler.restart();
-        res.json({ success: true, message: 'Programador reiniciado' });
+      case 'backup':
+        const backupPath = await database.createBackup();
+        res.json({ success: true, message: 'Respaldo creado', path: backupPath });
         break;
         
-      case 'create_backup':
-        const backupPath = await database.createBackup();
-        res.json({ success: true, backupPath });
+      case 'restart':
+        res.json({ success: true, message: 'Reinicio programado' });
+        setTimeout(() => process.exit(0), 1000);
         break;
         
       case 'test_gpio':
-        const testResults = gpioController.testGPIOConnections();
+        const testResults = gpioController.testSystem();
         res.json({ success: true, testResults });
         break;
         
       default:
-        res.status(400).json({ error: 'Acción no válida' });
+        res.status(400).json({ success: false, error: 'Acción no válida' });
     }
     
   } catch (error) {
-    console.error('Error en control del sistema:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Error en API de control del sistema:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
@@ -460,7 +346,7 @@ io.on('connection', (socket) => {
 
 // Función de limpieza al cerrar
 function cleanup() {
-  console.log('\n🔄 Cerrando sistema...');
+  console.log('\n🔄 Cerrando sistema (MODO DESARROLLO)...');
   
   if (scheduler) {
     scheduler.stop();
@@ -488,6 +374,7 @@ initializeSystem().then(() => {
     console.log(`🌐 Servidor web iniciado en http://${config.server.host}:${config.server.port}`);
     console.log(`📱 Interfaz web disponible en http://localhost:${config.server.port}`);
     console.log(`🔌 Socket.IO disponible en ws://localhost:${config.server.port}`);
+    console.log(`⚠️  MODO DESARROLLO - Seguridad relajada para desarrollo`);
   });
 }).catch((error) => {
   console.error('❌ Error iniciando servidor:', error);

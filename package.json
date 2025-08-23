@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
+    "dev-relaxed": "node app.development.js",
     "test": "node test_system.js",
     "test-scheduler": "node test_scheduler.js",
     "test-web": "node test_web_interface.js",
