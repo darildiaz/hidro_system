@@ -5,7 +5,7 @@
  */
 
 const rpio = require('rpio');
-const rpiDhtSensor = require('rpi-dht-sensor');
+const DHT11Sensor = require('./dht11_sensor');
 const config = require('./config');
 const Database = require('./database');
 
@@ -79,7 +79,7 @@ class GPIOController {
    */
   setupDHT11() {
     try {
-      this.dht11 = new rpiDhtSensor.DHT11(config.gpio.dht11Pin);
+      this.dht11 = new DHT11Sensor(config.gpio.dht11Pin);
       console.log(`Sensor DHT11 configurado en GPIO${config.gpio.dht11Pin}`);
     } catch (error) {
       console.error('Error configurando sensor DHT11:', error);
@@ -98,7 +98,7 @@ class GPIOController {
     try {
       const readout = this.dht11.read();
       
-      if (readout.temperature === null || readout.humidity === null) {
+      if (!readout || readout.temperature === null || readout.humidity === null) {
         throw new Error('Lectura inválida del sensor DHT11');
       }
 

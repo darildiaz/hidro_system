@@ -7,6 +7,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "node test_system.js",
+    "install-simple": "node install_simple.js",
     "install-deps": "node install_dependencies.js"
   },
   "keywords": [
@@ -30,7 +31,6 @@
     "node-cron": "^3.0.3",
     "moment": "^2.29.4",
     "rpio": "^2.4.2",
-    "rpi-dht-sensor": "^0.1.1",
     "shelljs": "^0.8.5",
     "winston": "^3.11.0",
     "helmet": "^7.1.0",

@@ -1,4 +1,4 @@
-# 🌱 Sistema de Hidroponía Automatizado - Node.js
+cls# 🌱 Sistema de Hidroponía Automatizado - Node.js
 
 Sistema completo de control automatizado para hidroponía usando **Node.js**, **Express** y **Socket.IO**, con control de 4 relés, monitoreo de temperatura/humedad DHT11 e interfaz web moderna.
 
@@ -83,16 +83,49 @@ IN     →       GPIO18 (Pin 12)
 
 ## 🚀 Instalación Rápida
 
-### Opción 1: Instalación Automática (Recomendada)
+### 🔧 Modo Simulación
+
+El sistema incluye un **modo simulación** que permite:
+
+- **Desarrollo sin hardware**: Pruebe todas las funcionalidades sin Raspberry Pi
+- **Datos simulados**: El sensor DHT11 genera lecturas realistas
+- **Control simulado**: Los relés se simulan (no se activan físicamente)
+- **Funcionalidad completa**: Todas las características web están disponibles
+
+**Ideal para:**
+
+- 🧪 Desarrollo y pruebas
+- 💻 Sistemas sin GPIO disponible
+- 🎓 Aprendizaje y demostración
+- 🔍 Verificación de funcionalidades
+
+### Opción 1: Instalación Simplificada (Recomendada para evitar problemas de compilación)
 
 ```bash
 # Clonar o descargar el proyecto
 git clone <url-del-repositorio>
 cd hidro_system
 
-# Ejecutar instalación automática
+# Ejecutar instalación simplificada
+node install_simple.js
+```
+
+**Ventajas de la instalación simplificada:**
+
+- ✅ Evita problemas de compilación nativa
+- ✅ Compatible con Node.js 18+
+- ✅ Instalación más rápida y confiable
+- ✅ Funciona en modo simulación si GPIO no está disponible
+- ✅ Ideal para desarrollo y pruebas
+
+### Opción 2: Instalación Automática Completa
+
+```bash
+# Ejecutar instalación automática completa
 node install.js
 ```
+
+**Nota:** Esta opción puede fallar en sistemas con Node.js 18+ debido a incompatibilidades de bibliotecas nativas.
 
 ### Opción 2: Instalación Manual
 
@@ -383,5 +416,7 @@ hidro_system/
 ├── logs/                 # Archivos de log
 └── backups/              # Respaldos automáticos
 ```
-#   h i d r o _ s y s t e m  
+
+#   h i d r o _ s y s t e m 
+ 
  
