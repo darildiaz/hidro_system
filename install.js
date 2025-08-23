@@ -288,15 +288,13 @@ if [ -n "$PID" ]; then
     echo "✅ Sistema en ejecución (PID: $PID)"
     echo "📅 Iniciado: $(ps -o lstart= -p $PID)"
     echo "⏱️  Uptime: $(ps -o etime= -p $PID)"
-else
-    echo "❌ Sistema no está ejecutándose"
-fi
-
-# Verificar uso de memoria
-if [ -n "$PID" ]; then
+    
+    # Verificar uso de memoria
     MEMORY=$(ps -o rss= -p $PID)
     MEMORY_MB=$((MEMORY / 1024))
     echo "💾 Memoria: ${MEMORY_MB} MB"
+else
+    echo "❌ Sistema no está ejecutándose"
 fi
 `;
 
