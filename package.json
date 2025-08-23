@@ -7,6 +7,8 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "node test_system.js",
+    "test-scheduler": "node test_scheduler.js",
+    "test-web": "node test_web_interface.js",
     "install-simple": "node install_simple.js",
     "install-deps": "node install_dependencies.js"
   },

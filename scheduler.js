@@ -334,7 +334,28 @@ class Scheduler {
   startScheduledTasks() {
     // Tarea de respaldo automático
     if (config.backup.enabled) {
-      const backupTask = cron.schedule(`0 ${config.backup.frequency} * * *`, () => {
+      // Convertir frecuencia de respaldo a expresión cron válida
+      let backupCronExpression;
+      const frequency = config.backup.frequency;
+      
+      if (frequency === 24) {
+        // Respaldo diario a las 2:00 AM
+        backupCronExpression = '0 2 * * *';
+      } else if (frequency === 12) {
+        // Respaldo cada 12 horas (2:00 AM y 2:00 PM)
+        backupCronExpression = '0 2,14 * * *';
+      } else if (frequency === 6) {
+        // Respaldo cada 6 horas
+        backupCronExpression = '0 */6 * * *';
+      } else if (frequency === 1) {
+        // Respaldo cada hora
+        backupCronExpression = '0 * * * *';
+      } else {
+        // Respaldo diario por defecto
+        backupCronExpression = '0 2 * * *';
+      }
+      
+      const backupTask = cron.schedule(backupCronExpression, () => {
         this.createBackup();
       }, {
         scheduled: false,
@@ -343,6 +364,8 @@ class Scheduler {
       
       backupTask.start();
       this.scheduledTasks.set('backup', backupTask);
+      
+      console.log(`Tarea de respaldo programada: ${backupCronExpression}`);
     }
     
     // Tarea de limpieza de logs

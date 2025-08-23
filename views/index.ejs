@@ -362,26 +362,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Inicializar Socket.IO
 function initializeSocket() {
-    socket = io();
-    
-    socket.on('sensor_data', function(data) {
-        updateSensorDisplay(data);
-        updateCharts(data);
-    });
-    
-    socket.on('rele_states', function(states) {
-        updateReleStates(states);
-    });
-    
-    socket.on('connect', function() {
-        console.log('Conectado al servidor');
-        showNotification('Conectado al sistema', 'success');
-    });
-    
-    socket.on('disconnect', function() {
-        console.log('Desconectado del servidor');
-        showNotification('Desconectado del sistema', 'warning');
-    });
+    try {
+        // Verificar que Socket.IO esté disponible
+        if (typeof io === 'undefined') {
+            console.warn('Socket.IO no está disponible, usando modo sin conexión en tiempo real');
+            return;
+        }
+        
+        socket = io();
+        
+        socket.on('sensor_data', function(data) {
+            updateSensorDisplay(data);
+            updateCharts(data);
+        });
+        
+        socket.on('rele_states', function(states) {
+            updateReleStates(states);
+        });
+        
+        socket.on('connect', function() {
+            console.log('Conectado al servidor');
+            showNotification('Conectado al sistema', 'success');
+        });
+        
+        socket.on('disconnect', function() {
+            console.log('Desconectado del servidor');
+            showNotification('Desconectado del sistema', 'warning');
+        });
+        
+        socket.on('connect_error', function(error) {
+            console.error('Error de conexión Socket.IO:', error);
+            showNotification('Error de conexión en tiempo real', 'error');
+        });
+        
+    } catch (error) {
+        console.error('Error inicializando Socket.IO:', error);
+        showNotification('Modo sin conexión en tiempo real', 'warning');
+    }
 }
 
 // Inicializar gráficos
