@@ -15,11 +15,13 @@
   --dark-bg: #343a40;
   --card-shadow: 0 4px 20px rgba(40, 167, 69, 0.1);
   --card-shadow-hover: 0 8px 30px rgba(40, 167, 69, 0.15);
-  --nav-bg: #ffffff;
-  --nav-border: #e9ecef;
-  --nav-text: #495057;
-  --nav-hover: #f8f9fa;
-  --nav-active: #e8f5e8;
+  --nav-bg: #198754;
+  --nav-border: #0f5132;
+  --nav-text: #ffffff;
+  --nav-hover: #20c997;
+  --nav-active: #28a745;
+  --nav-dropdown-bg: #ffffff;
+  --nav-dropdown-text: #155724;
 }
 
 /* Estilos generales */
@@ -31,11 +33,11 @@ body {
   color: var(--dark-green);
 }
 
-/* ===== NAVEGACIÓN MODERNA ===== */
+/* ===== NAVEGACIÓN VERDE MODERNA ===== */
 .modern-navbar {
-  background: var(--nav-bg);
-  border-bottom: 2px solid var(--nav-border);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+  background: var(--green-gradient);
+  border-bottom: 3px solid var(--nav-border);
+  box-shadow: 0 4px 25px rgba(40, 167, 69, 0.4);
   padding: 0.75rem 0;
   backdrop-filter: blur(20px);
   transition: all 0.3s ease;
@@ -53,23 +55,28 @@ body {
 .brand-logo {
   width: 50px;
   height: 50px;
-  background: var(--green-gradient);
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .brand-logo i {
   font-size: 1.8rem;
   color: white;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .brand-logo:hover {
   transform: scale(1.05) rotate(5deg);
-  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .brand-text {
@@ -81,13 +88,14 @@ body {
 .brand-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--dark-green);
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   letter-spacing: -0.5px;
 }
 
 .brand-subtitle {
   font-size: 0.8rem;
-  color: var(--primary-green);
+  color: rgba(255, 255, 255, 0.9);
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 500;
@@ -107,13 +115,14 @@ body {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1.25rem;
-  color: var(--nav-text) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
   font-weight: 500;
   border-radius: 12px;
   transition: all 0.3s ease;
   text-decoration: none;
   position: relative;
   overflow: hidden;
+  border: 1px solid transparent;
 }
 
 .modern-link::before {
@@ -123,27 +132,28 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: var(--green-gradient);
+  background: rgba(255, 255, 255, 0.15);
   transition: left 0.3s ease;
   z-index: -1;
-  opacity: 0;
 }
 
 .modern-link:hover::before {
   left: 0;
-  opacity: 1;
 }
 
 .modern-link:hover {
   color: white !important;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.25);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .modern-link.active {
-  background: var(--nav-active);
-  color: var(--primary-green) !important;
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.15);
+  background: rgba(255, 255, 255, 0.2);
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .modern-link.active::before {
@@ -170,15 +180,15 @@ body {
 
 /* Dropdowns modernos */
 .modern-dropdown {
-  background: white;
+  background: var(--nav-dropdown-bg);
   border: none;
   border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   padding: 1rem 0;
   margin-top: 0.5rem;
   min-width: 220px;
   backdrop-filter: blur(20px);
-  border: 1px solid var(--nav-border);
+  border: 2px solid var(--light-green);
   animation: slideDown 0.3s ease-out;
 }
 
@@ -190,11 +200,12 @@ body {
   letter-spacing: 0.5px;
   padding: 0.5rem 1.5rem;
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid var(--light-green);
+  border-bottom: 2px solid var(--light-green);
+  background: linear-gradient(135deg, #f8fcf8 0%, #f0f8f0 100%);
 }
 
 .modern-dropdown .dropdown-item {
-  color: var(--nav-text);
+  color: var(--nav-dropdown-text);
   padding: 0.75rem 1.5rem;
   transition: all 0.3s ease;
   border-radius: 8px;
@@ -206,10 +217,10 @@ body {
 }
 
 .modern-dropdown .dropdown-item:hover {
-  background: var(--nav-hover);
-  color: var(--primary-green);
+  background: var(--light-green);
+  color: var(--dark-green);
   transform: translateX(8px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
 }
 
 .modern-dropdown .dropdown-item i {
@@ -222,39 +233,44 @@ body {
 .dropdown-divider {
   margin: 0.5rem 1rem;
   border-color: var(--light-green);
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 /* Perfil de usuario moderno */
 .user-profile {
-  background: var(--nav-hover);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 25px;
   padding: 0.5rem 1rem;
   margin-left: 1rem;
-  border: 1px solid var(--nav-border);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .user-profile:hover {
-  background: var(--nav-active);
+  background: rgba(255, 255, 255, 0.25);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 .user-avatar {
   width: 40px;
   height: 40px;
-  background: var(--green-gradient);
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 0.75rem;
+  backdrop-filter: blur(10px);
 }
 
 .user-avatar i {
   font-size: 1.3rem;
   color: white;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .user-info {
@@ -266,12 +282,13 @@ body {
 .user-name {
   font-weight: 600;
   font-size: 0.9rem;
-  color: var(--dark-green);
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .user-role {
   font-size: 0.75rem;
-  color: var(--primary-green);
+  color: rgba(255, 255, 255, 0.9);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -284,27 +301,30 @@ body {
 
 /* Botón toggle moderno */
 .modern-toggler {
-  border: 2px solid var(--nav-border);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 10px;
   padding: 0.5rem;
   transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .modern-toggler:hover {
-  border-color: var(--primary-green);
-  background: var(--nav-hover);
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .modern-toggler:focus {
-  box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25);
 }
 
 .toggler-icon {
   width: 20px;
   height: 2px;
-  background: var(--nav-text);
+  background: white;
   position: relative;
   transition: all 0.3s ease;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 }
 
 .toggler-icon::before,
@@ -313,8 +333,9 @@ body {
   position: absolute;
   width: 20px;
   height: 2px;
-  background: var(--nav-text);
+  background: white;
   transition: all 0.3s ease;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
 }
 
 .toggler-icon::before {
@@ -931,19 +952,20 @@ input:checked + .rele-slider:before {
   }
 } 
 
-/* Responsive del menú moderno */
+/* Responsive del menú verde moderno */
 @media (max-width: 991.98px) {
   .modern-navbar {
     padding: 0.5rem 0;
   }
   
   .navbar-collapse {
-    background: white;
+    background: var(--green-gradient);
     border-radius: 16px;
     margin-top: 1rem;
     padding: 1.5rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--nav-border);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--nav-border);
+    backdrop-filter: blur(20px);
   }
   
   .modern-nav {
@@ -957,6 +979,17 @@ input:checked + .rele-slider:before {
   .modern-link {
     justify-content: center;
     padding: 1rem;
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+  
+  .modern-link:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white !important;
+  }
+  
+  .modern-link.active {
+    background: rgba(255, 255, 255, 0.25);
+    color: white !important;
   }
   
   .modern-dropdown {
@@ -971,30 +1004,209 @@ input:checked + .rele-slider:before {
   
   .dropdown-header {
     text-align: center;
-    color: var(--primary-green);
-    border-bottom-color: var(--light-green);
+    color: rgba(255, 255, 255, 0.9);
+    border-bottom-color: rgba(255, 255, 255, 0.3);
+    background: transparent;
   }
   
   .modern-dropdown .dropdown-item {
     text-align: center;
     justify-content: center;
     margin: 0.25rem 0;
-    color: var(--nav-text);
+    color: rgba(255, 255, 255, 0.9);
   }
   
   .modern-dropdown .dropdown-item:hover {
-    background: var(--nav-hover);
-    color: var(--primary-green);
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
     transform: none;
+  }
+  
+  .modern-dropdown .dropdown-item i {
+    color: rgba(255, 255, 255, 0.8);
   }
   
   .user-profile {
     margin: 1rem 0;
     justify-content: center;
-    background: var(--nav-hover);
+    background: rgba(255, 255, 255, 0.15);
   }
   
   .user-info {
     text-align: center;
   }
+} 
+
+/* Hero section con tema verde */
+.hero-section {
+  background: var(--green-gradient);
+  color: white;
+  padding: 2.5rem 0;
+  margin-bottom: 2rem;
+  border-radius: 0 0 2rem 2rem;
+  box-shadow: var(--card-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+
+.hero-section h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section p {
+  font-size: 1rem;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+/* Tarjetas con tema verde */
+.main-card.green-theme {
+  background: white;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(40, 167, 69, 0.1);
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid var(--primary-green);
+  border-top: 2px solid var(--light-green);
+}
+
+.main-card.green-theme:hover {
+  box-shadow: 0 8px 30px rgba(40, 167, 69, 0.15);
+  transform: translateY(-3px);
+  border-left-color: var(--secondary-green);
+}
+
+.main-card.green-theme .card-header {
+  background: var(--green-gradient);
+  color: white;
+  border-radius: 1rem 1rem 0 0 !important;
+  border: none;
+  padding: 1.25rem;
+}
+
+.main-card.green-theme .card-header h5 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.main-card.green-theme .card-body {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fcf8 100%);
+}
+
+/* Tarjetas de estado con acento verde */
+.status-card.green-accent {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f8f0 100%);
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+  border: 2px solid transparent;
+}
+
+.status-card.green-accent:hover {
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+  transform: translateY(-2px);
+  border-color: var(--light-green);
+}
+
+.status-card.green-accent .card-body {
+  padding: 1.25rem;
+}
+
+/* Reloj del sistema */
+.system-clock {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.clock-time {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  line-height: 1;
+}
+
+.clock-date {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 0.5rem;
+}
+
+/* Indicadores de estado */
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+.status-indicator.online {
+  background-color: #28a745;
+  box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+}
+
+.status-indicator.offline {
+  background-color: #dc3545;
+  box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+}
+
+/* Botones del tema hidropónico */
+.btn-hidro {
+  background: var(--green-gradient);
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-hidro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+  color: white;
+}
+
+.btn-hidro-outline {
+  background: transparent;
+  border: 2px solid var(--primary-green);
+  color: var(--primary-green);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-hidro-outline:hover {
+  background: var(--primary-green);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
 } 
