@@ -1,440 +1,469 @@
 /* 
- * Estilos Personalizados para Sistema de Hidroponía Automatizado
+ * Estilos Personalizados - Sistema de Hidroponía Automatizado
+ * Basado en Bootstrap 5 con tema verde hidropónico
  * Ing. Daril Díaz - 2024
  */
 
 :root {
-    --primary-green: #198754;
-    --secondary-green: #20c997;
-    --light-green: #d1e7dd;
-    --dark-green: #0f5132;
-    --accent-blue: #0d6efd;
-    --accent-orange: #fd7e14;
-    --accent-red: #dc3545;
-    --accent-yellow: #ffc107;
-    --text-dark: #212529;
-    --text-muted: #6c757d;
-    --bg-light: #f8f9fa;
-    --border-color: #dee2e6;
+  --primary-green: #28a745;
+  --secondary-green: #20c997;
+  --accent-green: #198754;
+  --light-green: #d1e7dd;
+  --dark-green: #0f5132;
+  --success-green: #198754;
+  --warning-orange: #fd7e14;
+  --danger-red: #dc3545;
+  --info-blue: #0dcaf0;
+  --dark-bg: #212529;
+  --light-bg: #f8f9fa;
+  --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --card-shadow-hover: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
 /* Estilos generales */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg-light);
-    color: var(--text-dark);
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
 }
 
-/* Navbar personalizado */
-.navbar-dark.bg-success {
-    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green)) !important;
-    box-shadow: 0 2px 10px rgba(25, 135, 84, 0.3);
-}
-
+/* Header y navegación */
 .navbar-brand {
-    font-weight: 600;
-    font-size: 1.5rem;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--primary-green) !important;
+}
+
+.navbar-brand i {
+  margin-right: 0.5rem;
+  color: var(--secondary-green);
 }
 
 .navbar-nav .nav-link {
-    font-weight: 500;
-    transition: all 0.3s ease;
+  font-weight: 500;
+  color: var(--dark-bg) !important;
+  transition: color 0.3s ease;
 }
 
 .navbar-nav .nav-link:hover {
-    transform: translateY(-2px);
-    color: var(--light-green) !important;
+  color: var(--primary-green) !important;
 }
 
-/* Cards personalizadas */
-.card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    overflow: hidden;
+.navbar-nav .nav-link.active {
+  color: var(--primary-green) !important;
+  font-weight: 600;
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+/* Hero section */
+.hero-section {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+  color: white;
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+  border-radius: 0 0 2rem 2rem;
+  box-shadow: var(--card-shadow);
 }
 
-.card-header {
-    border-bottom: none;
-    font-weight: 600;
-    border-radius: 15px 15px 0 0 !important;
+.hero-section h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
 }
 
-.card-body {
-    padding: 1.5rem;
+.hero-section p {
+  font-size: 1.1rem;
+  opacity: 0.9;
 }
 
-/* Estados de relés */
-.card[id*="rele"] {
-    transition: all 0.3s ease;
+/* Tarjetas principales */
+.main-card {
+  background: white;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
 }
 
-.card[id*="rele"].border-success {
-    border-color: var(--primary-green) !important;
-    box-shadow: 0 4px 15px rgba(25, 135, 84, 0.2);
+.main-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
 }
 
-.card[id*="rele"].border-secondary {
-    border-color: var(--border-color) !important;
+.main-card .card-header {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+  color: white;
+  border-radius: 1rem 1rem 0 0 !important;
+  border: none;
+  padding: 1.5rem;
 }
 
-/* Switches personalizados */
-.form-check-input:checked {
-    background-color: var(--primary-green);
-    border-color: var(--primary-green);
+.main-card .card-header h5 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.2rem;
 }
 
-.form-check-input:focus {
-    border-color: var(--primary-green);
-    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+.main-card .card-body {
+  padding: 2rem;
+}
+
+/* Tarjetas de estado */
+.status-card {
+  background: white;
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.status-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-1px);
+}
+
+.status-card .card-body {
+  padding: 1.5rem;
+}
+
+.status-card .status-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.status-card .status-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.status-card .status-label {
+  color: #6c757d;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Switches de relés */
+.rele-switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.rele-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.rele-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.rele-slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .rele-slider {
+  background-color: var(--success-green);
+}
+
+input:checked + .rele-slider:before {
+  transform: translateX(26px);
 }
 
 /* Botones personalizados */
-.btn {
-    border-radius: 10px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border: none;
+.btn-hidro {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: var(--card-shadow);
 }
 
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+.btn-hidro:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--card-shadow-hover);
+  color: white;
 }
 
-.btn-success {
-    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+.btn-hidro:active {
+  transform: translateY(0);
 }
 
-.btn-outline-success {
-    border-color: var(--primary-green);
-    color: var(--primary-green);
+.btn-hidro-outline {
+  background: transparent;
+  border: 2px solid var(--primary-green);
+  color: var(--primary-green);
+  border-radius: 0.5rem;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
 }
 
-.btn-outline-success:hover {
-    background-color: var(--primary-green);
-    border-color: var(--primary-green);
-}
-
-.btn-group .btn {
-    border-radius: 8px;
-    margin: 0 2px;
-}
-
-/* Gráficos */
-canvas {
-    border-radius: 10px;
-}
-
-/* Tablas */
-.table {
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.table thead th {
-    background-color: var(--light-green);
-    border-bottom: 2px solid var(--primary-green);
-    font-weight: 600;
-    color: var(--dark-green);
-}
-
-.table tbody tr:hover {
-    background-color: rgba(25, 135, 84, 0.05);
-}
-
-/* Badges personalizados */
-.badge {
-    font-size: 0.75rem;
-    padding: 0.5em 0.75em;
-    border-radius: 8px;
-    font-weight: 500;
-}
-
-.badge.bg-success {
-    background-color: var(--primary-green) !important;
-}
-
-.badge.bg-secondary {
-    background-color: var(--text-muted) !important;
-}
-
-/* Breadcrumb personalizado */
-.breadcrumb {
-    background-color: transparent;
-    padding: 0;
-    margin: 0;
-}
-
-.breadcrumb-item + .breadcrumb-item::before {
-    color: var(--text-muted);
-}
-
-.breadcrumb-item.active {
-    color: var(--primary-green);
-    font-weight: 600;
-}
-
-/* Footer personalizado */
-footer {
-    background: linear-gradient(135deg, var(--light-green), #ffffff);
-    border-top: 2px solid var(--primary-green);
-}
-
-/* Modales personalizados */
-.modal-content {
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.modal-header {
-    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
-    color: white;
-    border-radius: 15px 15px 0 0;
-}
-
-.modal-header .btn-close {
-    filter: invert(1);
-}
-
-/* Toast personalizado */
-.toast {
-    border-radius: 10px;
-    border: none;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-}
-
-.toast-header {
-    background-color: var(--light-green);
-    border-bottom: 1px solid var(--border-color);
-}
-
-/* Formularios personalizados */
-.form-control, .form-select {
-    border-radius: 10px;
-    border: 2px solid var(--border-color);
-    transition: all 0.3s ease;
-}
-
-.form-control:focus, .form-select:focus {
-    border-color: var(--primary-green);
-    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
-}
-
-.form-label {
-    font-weight: 600;
-    color: var(--text-dark);
-}
-
-.form-text {
-    color: var(--text-muted);
-    font-size: 0.875rem;
-}
-
-/* Alertas personalizadas */
-.alert {
-    border-radius: 10px;
-    border: none;
-    font-weight: 500;
-}
-
-.alert-success {
-    background-color: var(--light-green);
-    color: var(--dark-green);
-}
-
-.alert-warning {
-    background-color: #fff3cd;
-    color: #856404;
-}
-
-.alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-.alert-info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-}
-
-/* Iconos personalizados */
-.bi {
-    transition: all 0.3s ease;
-}
-
-.card:hover .bi {
-    transform: scale(1.1);
-}
-
-/* Animaciones */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.card {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .container-fluid {
-        padding: 1rem;
-    }
-    
-    .card-body {
-        padding: 1rem;
-    }
-    
-    .btn-group {
-        flex-direction: column;
-        width: 100%;
-    }
-    
-    .btn-group .btn {
-        margin: 2px 0;
-        border-radius: 8px;
-    }
-    
-    .navbar-brand {
-        font-size: 1.25rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .col-md-3 {
-        margin-bottom: 1rem;
-    }
-    
-    .card {
-        margin-bottom: 1rem;
-    }
-    
-    .table-responsive {
-        font-size: 0.875rem;
-    }
-}
-
-/* Estados especiales */
-.system-offline {
-    background-color: var(--accent-red) !important;
-}
-
-.system-warning {
-    background-color: var(--accent-yellow) !important;
-}
-
-.system-online {
-    background-color: var(--primary-green) !important;
-}
-
-/* Efectos de hover para relés */
-.card[id*="rele"]:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+.btn-hidro-outline:hover {
+  background: var(--primary-green);
+  color: white;
+  transform: translateY(-1px);
 }
 
 /* Indicadores de estado */
 .status-indicator {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 8px;
-    animation: pulse 2s infinite;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
 }
 
 .status-indicator.online {
-    background-color: var(--primary-green);
+  background-color: var(--success-green);
+  box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.3);
 }
 
 .status-indicator.offline {
-    background-color: var(--accent-red);
+  background-color: var(--danger-red);
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.3);
 }
 
 .status-indicator.warning {
-    background-color: var(--accent-yellow);
+  background-color: var(--warning-orange);
+  box-shadow: 0 0 0 2px rgba(253, 126, 20, 0.3);
 }
 
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(25, 135, 84, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(25, 135, 84, 0);
-    }
+/* Gráficos y visualizaciones */
+.chart-container {
+  position: relative;
+  height: 300px;
+  margin: 1rem 0;
 }
 
-/* Scrollbar personalizado */
+/* Tablas personalizadas */
+.table-hidro {
+  background: white;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.table-hidro thead th {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+  color: white;
+  border: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+.table-hidro tbody tr:hover {
+  background-color: var(--light-green);
+}
+
+/* Alertas y notificaciones */
+.alert-hidro {
+  border: none;
+  border-radius: 0.75rem;
+  border-left: 4px solid;
+  box-shadow: var(--card-shadow);
+}
+
+.alert-hidro-success {
+  background-color: var(--light-green);
+  border-left-color: var(--success-green);
+  color: var(--dark-green);
+}
+
+.alert-hidro-warning {
+  background-color: #fff3cd;
+  border-left-color: var(--warning-orange);
+  color: #856404;
+}
+
+.alert-hidro-danger {
+  background-color: #f8d7da;
+  border-left-color: var(--danger-red);
+  color: #721c24;
+}
+
+/* Footer */
+.footer {
+  background: var(--dark-bg);
+  color: white;
+  padding: 2rem 0;
+  margin-top: 3rem;
+  border-radius: 2rem 2rem 0 0;
+}
+
+.footer h5 {
+  color: var(--secondary-green);
+  font-weight: 600;
+}
+
+.footer a {
+  color: #adb5bd;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  color: var(--secondary-green);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-section {
+    padding: 2rem 0;
+    border-radius: 0 0 1rem 1rem;
+  }
+  
+  .main-card .card-body {
+    padding: 1.5rem;
+  }
+  
+  .status-card .card-body {
+    padding: 1rem;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Scrollbar personalizada */
 ::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--bg-light);
+  background: #f1f1f1;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--primary-green);
-    border-radius: 4px;
+  background: var(--primary-green);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--dark-green);
-}
-
-/* Selección de texto */
-::selection {
-    background-color: var(--light-green);
-    color: var(--dark-green);
-}
-
-/* Enfoque para accesibilidad */
-.btn:focus,
-.form-control:focus,
-.form-select:focus {
-    outline: 2px solid var(--primary-green);
-    outline-offset: 2px;
+  background: var(--accent-green);
 }
 
 /* Estados de carga */
-.loading {
-    opacity: 0.6;
-    pointer-events: none;
-}
-
-.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    border: 2px solid var(--primary-green);
-    border-top: 2px solid transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--primary-green);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Tooltips personalizados */
+.tooltip-hidro {
+  background: var(--dark-bg);
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* Modales personalizados */
+.modal-hidro .modal-header {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+  color: white;
+  border-radius: 1rem 1rem 0 0;
+  border: none;
+}
+
+.modal-hidro .modal-footer {
+  border-top: 1px solid #dee2e6;
+  padding: 1rem 1.5rem;
+}
+
+/* Formularios personalizados */
+.form-control-hidro {
+  border: 2px solid #e9ecef;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control-hidro:focus {
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.form-label-hidro {
+  font-weight: 600;
+  color: var(--dark-bg);
+  margin-bottom: 0.5rem;
+}
+
+/* Badges personalizados */
+.badge-hidro {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Progress bars personalizados */
+.progress-hidro {
+  height: 0.75rem;
+  border-radius: 0.5rem;
+  background-color: #e9ecef;
+  overflow: hidden;
+}
+
+.progress-hidro .progress-bar {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+  border-radius: 0.5rem;
 } 
