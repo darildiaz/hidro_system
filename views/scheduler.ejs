@@ -17,40 +17,53 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <!-- Barra de Navegación -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success fixed-top">
+    <!-- Barra de Navegación Moderna -->
+    <nav class="navbar navbar-expand-lg fixed-top modern-navbar">
         <div class="container">
             <!-- Logo y Nombre -->
-            <a class="navbar-brand" href="/">
-                <div class="brand-container">
-                    <i class="bi bi-droplet-fill brand-icon"></i>
-                    <span class="brand-text-main">HidroSystem</span>
+            <a class="navbar-brand modern-brand" href="/">
+                <div class="brand-logo">
+                    <i class="bi bi-droplet-fill"></i>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">HidroSystem</span>
+                    <span class="brand-subtitle">Automation</span>
                 </div>
             </a>
 
             <!-- Botón Toggle para móvil -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler modern-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="toggler-icon"></span>
             </button>
 
             <!-- Menú de Navegación -->
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav me-auto modern-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="/" title="Dashboard">
-                            <i class="bi bi-house-door-fill"></i>
+                        <a class="nav-link modern-link" href="/">
+                            <div class="link-icon">
+                                <i class="bi bi-house-door-fill"></i>
+                            </div>
+                            <span class="link-text">Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="/scheduler" title="Programador">
-                            <i class="bi bi-clock-history"></i>
+                        <a class="nav-link modern-link active" href="/scheduler">
+                            <div class="link-icon">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+                            <span class="link-text">Programador</span>
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-gear-fill"></i>
+                        <a class="nav-link modern-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <div class="link-icon">
+                                <i class="bi bi-gear-fill"></i>
+                            </div>
+                            <span class="link-text">Configuración</span>
                         </a>
-                        <ul class="nav-dropdown compact">
+                        <ul class="dropdown-menu modern-dropdown">
+                            <li class="dropdown-header">Configuración del Sistema</li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-thermometer-half"></i> Sensores</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-toggle-on"></i> Relés</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-calendar-event"></i> Horarios</a></li>
@@ -58,20 +71,28 @@
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-graph-up-arrow"></i>
+                        <a class="nav-link modern-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <div class="link-icon">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                            <span class="link-text">Monitoreo</span>
                         </a>
-                        <ul class="nav-dropdown compact">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-speedometer2"></i> Estado</a></li>
+                        <ul class="dropdown-menu modern-dropdown">
+                            <li class="dropdown-header">Estado del Sistema</li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-speedometer2"></i> Estado Actual</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history"></i> Histórico</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-text"></i> Reportes</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-tools"></i>
+                        <a class="nav-link modern-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <div class="link-icon">
+                                <i class="bi bi-tools"></i>
+                            </div>
+                            <span class="link-text">Herramientas</span>
                         </a>
-                        <ul class="nav-dropdown compact">
+                        <ul class="dropdown-menu modern-dropdown">
+                            <li class="dropdown-header">Utilidades</li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-play-circle"></i> Pruebas</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-clockwise"></i> Reiniciar</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-question-circle"></i> Ayuda</a></li>
@@ -82,10 +103,17 @@
                 <!-- Menú del Usuario -->
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle user-menu-compact" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle-fill"></i>
+                        <a class="nav-link modern-link user-profile" href="#" role="button" data-bs-toggle="dropdown">
+                            <div class="user-avatar">
+                                <i class="bi bi-person-circle-fill"></i>
+                            </div>
+                            <div class="user-info">
+                                <span class="user-name">Ing. Daril Díaz</span>
+                                <span class="user-role">Administrador</span>
+                            </div>
                         </a>
-                        <ul class="nav-dropdown compact user-dropdown">
+                        <ul class="dropdown-menu modern-dropdown user-dropdown">
+                            <li class="dropdown-header">Mi Cuenta</li>
                             <li><a class="dropdown-item" href="/profile"><i class="bi bi-person"></i> Perfil</a></li>
                             <li><a class="dropdown-item" href="/security"><i class="bi bi-shield-lock"></i> Seguridad</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -98,7 +126,7 @@
     </nav>
 
     <!-- Espaciador para el contenido debajo de la navbar fija -->
-    <div style="height: 60px;"></div>
+    <div style="height: 80px;"></div>
 
     <div class="container-fluid page-content">
         <!-- Hero Section -->
