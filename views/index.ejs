@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <title><%= title %></title>
     
     <!-- Bootstrap 5 CSS -->
@@ -619,6 +621,9 @@
 
         // Inicializar cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {
+            // Forzar HTTP y prevenir HTTPS
+            forceHttpProtocol();
+            
             initChart();
             initSystemClock();
             
@@ -639,6 +644,23 @@
                 document.getElementById('system-uptime').textContent = `${hours}h ${minutes}m`;
             }, 1000);
         });
+
+        // Forzar protocolo HTTP
+        function forceHttpProtocol() {
+            if (window.location.protocol === 'https:') {
+                const newUrl = window.location.href.replace('https:', 'http:');
+                window.location.replace(newUrl);
+            }
+            
+            // Prevenir enlaces HTTPS
+            document.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A' && e.target.href.startsWith('https:')) {
+                    e.preventDefault();
+                    const newHref = e.target.href.replace('https:', 'http:');
+                    window.location.href = newHref;
+                }
+            });
+        }
 
         // Inicializar reloj del sistema
         function initSystemClock() {

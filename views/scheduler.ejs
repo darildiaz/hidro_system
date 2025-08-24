@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <title>Programador - Sistema de Hidroponía</title>
     
     <!-- Bootstrap 5 CSS -->
@@ -535,11 +537,31 @@
 
         // Inicializar cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {
+            // Forzar HTTP y prevenir HTTPS
+            forceHttpProtocol();
+            
             loadSchedules();
             loadConditions();
             updateSchedulerStatus();
             updateSystemClock(); // Actualizar reloj del sistema
         });
+
+        // Forzar protocolo HTTP
+        function forceHttpProtocol() {
+            if (window.location.protocol === 'https:') {
+                const newUrl = window.location.href.replace('https:', 'http:');
+                window.location.replace(newUrl);
+            }
+            
+            // Prevenir enlaces HTTPS
+            document.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A' && e.target.href.startsWith('https:')) {
+                    e.preventDefault();
+                    const newHref = e.target.href.replace('https:', 'http:');
+                    window.location.href = newHref;
+                }
+            });
+        }
 
         // Cargar horarios guardados
         function loadSchedules() {
