@@ -4,22 +4,17 @@
  * Ing. Daril Díaz - 2024
  */
 
+/* Variables del tema verde */
 :root {
-  --primary-green: #198754;
+  --primary-green: #28a745;
   --secondary-green: #20c997;
-  --accent-green: #0f5132;
-  --light-green: #d1e7dd;
-  --dark-green: #0f5132;
-  --success-green: #198754;
-  --warning-orange: #fd7e14;
-  --danger-red: #dc3545;
-  --info-blue: #0dcaf0;
-  --dark-bg: #212529;
-  --light-bg: #f8f9fa;
-  --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  --card-shadow-hover: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-  --green-gradient: linear-gradient(135deg, #198754 0%, #20c997 100%);
-  --green-gradient-light: linear-gradient(135deg, #20c997 0%, #75b798 100%);
+  --accent-green: #198754;
+  --light-green: #d4edda;
+  --dark-green: #155724;
+  --green-gradient: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  --dark-bg: #343a40;
+  --card-shadow: 0 4px 20px rgba(40, 167, 69, 0.1);
+  --card-shadow-hover: 0 8px 30px rgba(40, 167, 69, 0.15);
 }
 
 /* Estilos generales */
@@ -199,11 +194,53 @@ body {
   box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25);
 }
 
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
 /* Contenido de la página con tema verde */
 .page-content {
   background: linear-gradient(135deg, #f8fcf8 0%, #f0f8f0 100%);
   min-height: calc(100vh - 60px);
   padding: 2rem 1rem;
+}
+
+/* Hero section con tema verde */
+.hero-section {
+  background: var(--green-gradient);
+  color: white;
+  padding: 2.5rem 0;
+  margin-bottom: 2rem;
+  border-radius: 0 0 2rem 2rem;
+  box-shadow: var(--card-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+
+.hero-section h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section p {
+  font-size: 1rem;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
 }
 
 /* Tarjetas con tema verde */
@@ -452,32 +489,28 @@ input:checked + .rele-slider:before {
   color: var(--secondary-green);
 }
 
-/* Reloj del Sistema */
+/* Reloj del sistema */
 .system-clock {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
   border-radius: 1rem;
   padding: 1.5rem;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .clock-time {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 700;
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  font-family: 'Courier New', monospace;
-  letter-spacing: 2px;
+  line-height: 1;
 }
 
 .clock-date {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.9);
-  font-weight: 500;
   margin-top: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
 /* Responsive */
@@ -757,4 +790,72 @@ input:checked + .rele-slider:before {
     position: static;
     margin-right: 0.5rem;
   }
+} 
+
+/* Responsive del menú compacto */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    background: rgba(40, 167, 69, 0.95);
+    border-radius: 0.75rem;
+    margin-top: 0.75rem;
+    padding: 1rem;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+  
+  .navbar-nav .nav-link {
+    margin: 0.25rem 0;
+    text-align: center;
+    justify-content: center;
+    min-width: auto;
+    height: auto;
+    padding: 0.75rem 1rem;
+  }
+  
+  .nav-dropdown.compact {
+    background: transparent;
+    box-shadow: none;
+    margin-top: 0;
+    padding: 0;
+    border: none;
+    min-width: auto;
+  }
+  
+  .nav-dropdown.compact .dropdown-item {
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    justify-content: center;
+    margin: 0.25rem 0;
+  }
+  
+  .nav-dropdown.compact .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: none;
+  }
+  
+  .user-menu-compact {
+    margin: 0.5rem 0;
+    justify-content: center;
+    min-width: auto;
+    height: auto;
+    border-radius: 0.5rem;
+  }
+}
+
+/* Animaciones del menú compacto */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-dropdown.compact.show {
+  animation: slideDown 0.25s ease-out;
 } 
