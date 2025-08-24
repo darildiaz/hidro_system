@@ -137,7 +137,7 @@ if [ -n "$PID" ]; then
     
     # Verificar uso de memoria de forma segura
     MEMORY=$(ps -o rss= -p $PID 2>/dev/null)
-    if [ -n "$MEMORY" ] && [ "$MEMORY" -gt 0 ]; then
+    if [ -n "$MEMORY" ] && [ "$MEMORY" -gt 0 ] && [ "$MEMORY" -ne 0 ]; then
         MEMORY_MB=$((MEMORY / 1024))
         echo "💾 Memoria: ${MEMORY_MB} MB"
     fi
