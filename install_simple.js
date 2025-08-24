@@ -337,9 +337,11 @@ if [ -n "$PID" ]; then
     echo "⏱️  Uptime: $(ps -o etime= -p $PID)"
     
     # Verificar uso de memoria
-    MEMORY=$(ps -o rss= -p $PID)
-    MEMORY_MB=$((MEMORY / 1024))
-    echo "💾 Memoria: ${MEMORY_MB} MB"
+    if [ -n "$PID" ]; then
+        MEMORY=$(ps -o rss= -p $PID)
+        MEMORY_MB=$((MEMORY / 1024))
+        echo "💾 Memoria: ${MEMORY_MB} MB"
+    fi
 else
     echo "❌ Sistema no está ejecutándose"
 fi
