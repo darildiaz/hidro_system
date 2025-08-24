@@ -24,8 +24,13 @@
         <div class="container">
             <!-- Logo y Nombre -->
             <a class="navbar-brand" href="/">
-                <i class="bi bi-droplet-fill"></i>
-                <span class="brand-text">HidroSystem</span>
+                <div class="brand-container">
+                    <i class="bi bi-droplet-fill brand-icon"></i>
+                    <div class="brand-text-container">
+                        <span class="brand-text-main">HidroSystem</span>
+                        <span class="brand-text-sub">Automation</span>
+                    </div>
+                </div>
             </a>
 
             <!-- Botón Toggle para móvil -->
@@ -37,55 +42,96 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/">
-                            <i class="bi bi-house-door"></i> Dashboard
+                        <a class="nav-link active" href="/" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Panel principal del sistema">
+                            <i class="bi bi-house-door-fill"></i>
+                            <span class="nav-text">Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/scheduler">
-                            <i class="bi bi-clock"></i> Programador
+                        <a class="nav-link" href="/scheduler" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Programar relés y horarios">
+                            <i class="bi bi-clock-history"></i>
+                            <span class="nav-text">Programador</span>
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-gear"></i> Configuración
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-gear-fill"></i>
+                            <span class="nav-text">Configuración</span>
                         </a>
                         <ul class="nav-dropdown">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-thermometer"></i> Sensores</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-toggle-on"></i> Relés</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-calendar"></i> Horarios</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li class="dropdown-header">
+                                <i class="bi bi-sliders"></i>
+                                <span>Configuración del Sistema</span>
+                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-thermometer-half"></i> Sensores DHT11</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-toggle-on"></i> Control de Relés</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-calendar-event"></i> Horarios</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-database"></i> Base de Datos</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-bell"></i> Notificaciones</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-backup"></i> Respaldo</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-graph-up"></i> Monitoreo
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <span class="nav-text">Monitoreo</span>
                         </a>
                         <ul class="nav-dropdown">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-activity"></i> Estado Actual</a></li>
+                            <li class="dropdown-header">
+                                <i class="bi bi-activity"></i>
+                                <span>Estado del Sistema</span>
+                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-speedometer2"></i> Estado Actual</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history"></i> Histórico</a></li>
                             <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-text"></i> Reportes</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-graph-up"></i> Gráficos</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-download"></i> Exportar Datos</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="bi bi-question-circle"></i> Ayuda
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-tools"></i>
+                            <span class="nav-text">Herramientas</span>
                         </a>
+                        <ul class="nav-dropdown">
+                            <li class="dropdown-header">
+                                <i class="bi bi-wrench"></i>
+                                <span>Utilidades del Sistema</span>
+                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-play-circle"></i> Pruebas del Sistema</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-clockwise"></i> Reiniciar</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check"></i> Diagnóstico</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-question-circle"></i> Ayuda</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-info-circle"></i> Acerca de</a></li>
+                        </ul>
                     </li>
                 </ul>
 
                 <!-- Menú del Usuario -->
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> Usuario
+                        <a class="nav-link dropdown-toggle user-menu" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="user-avatar-nav">
+                                <i class="bi bi-person-circle-fill"></i>
+                            </div>
+                            <div class="user-info-nav">
+                                <span class="user-name">Ing. Daril Díaz</span>
+                                <span class="user-role">Administrador</span>
+                            </div>
                         </a>
-                        <ul class="nav-dropdown">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Perfil</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-shield-lock"></i> Seguridad</a></li>
+                        <ul class="nav-dropdown user-dropdown">
+                            <li class="dropdown-header">
+                                <i class="bi bi-person-badge"></i>
+                                <span>Mi Cuenta</span>
+                            </li>
+                            <li><a class="dropdown-item" href="/profile"><i class="bi bi-person"></i> Perfil</a></li>
+                            <li><a class="dropdown-item" href="/security"><i class="bi bi-shield-lock"></i> Seguridad</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Preferencias</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -590,6 +636,17 @@
             }
         }
 
+        // Función de cerrar sesión
+        function logout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                showNotification('Cerrando sesión...', 'warning');
+                setTimeout(() => {
+                    // Aquí puedes agregar lógica de limpieza de sesión
+                    window.location.reload();
+                }, 1500);
+            }
+        }
+
         // Sistema de notificaciones
         function showNotification(message, type = 'info') {
             const toastContainer = document.getElementById('toast-container') || createToastContainer();
@@ -624,6 +681,9 @@
             // Forzar HTTP y prevenir HTTPS
             forceHttpProtocol();
             
+            // Inicializar tooltips de Bootstrap
+            initTooltips();
+            
             initChart();
             initSystemClock();
             
@@ -644,6 +704,18 @@
                 document.getElementById('system-uptime').textContent = `${hours}h ${minutes}m`;
             }, 1000);
         });
+
+        // Inicializar tooltips
+        function initTooltips() {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    trigger: 'hover',
+                    placement: 'bottom',
+                    animation: true
+                });
+            });
+        }
 
         // Forzar protocolo HTTP
         function forceHttpProtocol() {
