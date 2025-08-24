@@ -23,27 +23,49 @@ class GPIOController {
    */
   init() {
     try {
-      // Inicializar rpio con mapeo GPIO
-      rpio.init({
-        mapping: 'gpio',
-        mock: 'raspberry-pi-3' // Para desarrollo en otros sistemas
-      });
+      // Detectar si estamos en Windows o sistema sin GPIO
+      if (process.platform === 'win32' || process.platform === 'darwin') {
+        console.log('Sistema detectado sin GPIO real - Activando modo simulación');
+        this.simulationMode = true;
+        this.setupSimulationMode();
+      } else {
+        // Inicializar rpio solo en sistemas Linux con GPIO real
+        try {
+          rpio.init({
+            mapping: 'gpio',
+            mock: 'raspberry-pi-3'
+          });
+          this.simulationMode = false;
+          console.log('GPIO real inicializado correctamente');
+        } catch (rpioError) {
+          console.log('Error con GPIO real - Activando modo simulación');
+          this.simulationMode = true;
+          this.setupSimulationMode();
+        }
+      }
 
       // Configurar pines de relés
-      this.setupRelePins();
+      if (!this.simulationMode) {
+        this.setupRelePins();
+      }
       
       // Configurar sensor DHT11
       this.setupDHT11();
       
       this.isInitialized = true;
-      console.log('GPIO inicializado correctamente');
+      console.log(`GPIO inicializado en modo ${this.simulationMode ? 'simulación' : 'hardware'}`);
       
       // Guardar log del sistema
-      this.database.saveSystemLog('info', 'GPIO inicializado correctamente', 'GPIOController');
+      this.database.saveSystemLog('info', `GPIO inicializado en modo ${this.simulationMode ? 'simulación' : 'hardware'}`, 'GPIOController');
       
     } catch (error) {
       console.error('Error inicializando GPIO:', error);
       this.database.saveSystemLog('error', `Error inicializando GPIO: ${error.message}`, 'GPIOController');
+      
+      // Fallback a modo simulación
+      this.simulationMode = true;
+      this.setupSimulationMode();
+      this.isInitialized = true;
     }
   }
 
@@ -72,6 +94,24 @@ class GPIOController {
         console.error(`Error configurando relé ${index + 1} en GPIO${pin}:`, error);
       }
     });
+  }
+
+  /**
+   * Configurar modo simulación
+   */
+  setupSimulationMode() {
+    console.log('Configurando modo simulación para GPIO');
+    this.simulationMode = true;
+    
+    // Inicializar estados de relés en simulación
+    this.releStates = [false, false, false, false];
+    
+    // Guardar estados iniciales en base de datos
+    for (let i = 0; i < 4; i++) {
+      this.database.saveReleState(i + 1, false, 'Inicialización en modo simulación');
+    }
+    
+    console.log('Modo simulación configurado correctamente');
   }
 
   /**
@@ -150,35 +190,56 @@ class GPIOController {
     }
 
     const pinIndex = releId - 1;
-    const pin = config.gpio.relePins[pinIndex];
     
     try {
-      // Determinar estado del pin según configuración
-      let pinState;
-      if (config.gpio.releActiveLow) {
-        pinState = state ? rpio.LOW : rpio.HIGH;
+      if (this.simulationMode) {
+        // Modo simulación - solo actualizar estado interno
+        this.releStates[pinIndex] = state;
+        
+        // Guardar estado en base de datos
+        this.database.saveReleState(releId, state, reason);
+        
+        // Guardar log del sistema
+        const action = state ? 'activado' : 'desactivado';
+        this.database.saveSystemLog('info', 
+          `Relé ${releId} ${action} (SIMULACIÓN) - Razón: ${reason}`, 
+          'GPIOController'
+        );
+
+        console.log(`Relé ${releId} ${action} (SIMULACIÓN)`);
+        return true;
+        
       } else {
-        pinState = state ? rpio.HIGH : rpio.LOW;
+        // Modo hardware - controlar pin físico
+        const pin = config.gpio.relePins[pinIndex];
+        
+        // Determinar estado del pin según configuración
+        let pinState;
+        if (config.gpio.releActiveLow) {
+          pinState = state ? rpio.LOW : rpio.HIGH;
+        } else {
+          pinState = state ? rpio.HIGH : rpio.LOW;
+        }
+
+        // Escribir estado en el pin
+        rpio.write(pin, pinState);
+        
+        // Actualizar estado interno
+        this.releStates[pinIndex] = state;
+        
+        // Guardar estado en base de datos
+        this.database.saveReleState(releId, state, reason);
+        
+        // Guardar log del sistema
+        const action = state ? 'activado' : 'desactivado';
+        this.database.saveSystemLog('info', 
+          `Relé ${releId} ${action} - Razón: ${reason}`, 
+          'GPIOController'
+        );
+
+        console.log(`Relé ${releId} ${action} en GPIO${pin}`);
+        return true;
       }
-
-      // Escribir estado en el pin
-      rpio.write(pin, pinState);
-      
-      // Actualizar estado interno
-      this.releStates[pinIndex] = state;
-      
-      // Guardar estado en base de datos
-      this.database.saveReleState(releId, state, reason);
-      
-      // Guardar log del sistema
-      const action = state ? 'activado' : 'desactivado';
-      this.database.saveSystemLog('info', 
-        `Relé ${releId} ${action} - Razón: ${reason}`, 
-        'GPIOController'
-      );
-
-      console.log(`Relé ${releId} ${action} en GPIO${pin}`);
-      return true;
       
     } catch (error) {
       console.error(`Error controlando relé ${releId}:`, error);
@@ -282,12 +343,16 @@ class GPIOController {
    */
   getSystemInfo() {
     return {
+      platform: process.platform,
+      architecture: process.arch,
+      gpioMode: this.simulationMode ? 'simulation' : 'hardware',
       gpioInitialized: this.isInitialized,
-      releCount: config.gpio.relePins.length,
-      relePins: config.gpio.relePins,
+      releCount: this.releStates.length,
+      relePins: this.simulationMode ? [17, 18, 27, 22] : config.gpio.relePins,
       dht11Pin: config.gpio.dht11Pin,
       releStates: this.releStates,
-      activeLow: config.gpio.releActiveLow
+      activeLow: config.gpio.releActiveLow,
+      availablePins: this.simulationMode ? [17, 18, 27, 22, 23, 24, 25, 4] : config.gpio.relePins
     };
   }
 
@@ -299,13 +364,19 @@ class GPIOController {
       // Desactivar todos los relés
       this.deactivateAllRele('Limpieza del sistema');
       
-      // Cerrar pines GPIO
-      config.gpio.relePins.forEach(pin => {
-        rpio.close(pin);
-      });
+      if (!this.simulationMode) {
+        // Cerrar pines GPIO solo en modo hardware
+        config.gpio.relePins.forEach(pin => {
+          try {
+            rpio.close(pin);
+          } catch (error) {
+            console.log(`Pin ${pin} ya cerrado o no disponible`);
+          }
+        });
+      }
       
-      console.log('GPIO limpiado correctamente');
-      this.database.saveSystemLog('info', 'GPIO limpiado correctamente', 'GPIOController');
+      console.log(`GPIO limpiado correctamente (modo ${this.simulationMode ? 'simulación' : 'hardware'})`);
+      this.database.saveSystemLog('info', `GPIO limpiado correctamente (modo ${this.simulationMode ? 'simulación' : 'hardware'})`, 'GPIOController');
       
     } catch (error) {
       console.error('Error limpiando GPIO:', error);
@@ -323,35 +394,60 @@ class GPIOController {
       overall: true
     };
 
-    // Probar relés
-    config.gpio.relePins.forEach((pin, index) => {
+    if (this.simulationMode) {
+      // Modo simulación - probar funcionalidad simulada
+      for (let i = 0; i < 4; i++) {
+        results.rele.push({
+          releId: i + 1,
+          gpioPin: [17, 18, 27, 22][i],
+          status: 'SIMULACIÓN',
+          currentState: this.releStates[i],
+          mode: 'simulation'
+        });
+      }
+      
+      // Probar sensor DHT11 en simulación
       try {
-        // Leer estado actual del pin
-        const currentState = rpio.read(pin);
-        results.rele.push({
-          releId: index + 1,
-          gpioPin: pin,
-          status: 'OK',
-          currentState: currentState
-        });
+        const reading = this.readDHT11();
+        results.dht11 = reading !== null;
       } catch (error) {
-        results.rele.push({
-          releId: index + 1,
-          gpioPin: pin,
-          status: 'ERROR',
-          error: error.message
-        });
+        results.dht11 = false;
         results.overall = false;
       }
-    });
+      
+    } else {
+      // Modo hardware - probar pines físicos
+      config.gpio.relePins.forEach((pin, index) => {
+        try {
+          // Leer estado actual del pin
+          const currentState = rpio.read(pin);
+          results.rele.push({
+            releId: index + 1,
+            gpioPin: pin,
+            status: 'OK',
+            currentState: currentState,
+            mode: 'hardware'
+          });
+        } catch (error) {
+          results.rele.push({
+            releId: index + 1,
+            gpioPin: pin,
+            status: 'ERROR',
+            error: error.message,
+            mode: 'hardware'
+          });
+          results.overall = false;
+        }
+      });
 
-    // Probar sensor DHT11
-    try {
-      const reading = this.readDHT11();
-      results.dht11 = reading !== null;
-    } catch (error) {
-      results.dht11 = false;
-      results.overall = false;
+      // Probar sensor DHT11
+      try {
+        const reading = this.readDHT11();
+        results.dht11 = reading !== null;
+      } catch (error) {
+        results.dht11 = false;
+        results.overall = false;
+      }
     }
 
     return results;
