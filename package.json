@@ -7,6 +7,8 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "dev-relaxed": "node app.development.js",
+    "dev-ip": "HOST=192.168.1.39 PORT=3000 node app.development.js",
+    "dev-local": "HOST=localhost PORT=3000 node app.development.js",
     "test": "node test_system.js",
     "test-scheduler": "node test_scheduler.js",
     "test-web": "node test_web_interface.js",

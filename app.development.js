@@ -370,11 +370,18 @@ process.on('SIGTERM', cleanup);
 
 // Inicializar sistema y iniciar servidor
 initializeSystem().then(() => {
-  server.listen(config.server.port, config.server.host, () => {
-    console.log(`🌐 Servidor web iniciado en http://${config.server.host}:${config.server.port}`);
-    console.log(`📱 Interfaz web disponible en http://localhost:${config.server.port}`);
-    console.log(`🔌 Socket.IO disponible en ws://localhost:${config.server.port}`);
+  const host = config.server.host;
+  const port = config.server.port;
+  
+  server.listen(port, host, () => {
+    console.log(`🌐 Servidor web iniciado en http://${host}:${port}`);
+    console.log(`📱 Interfaz web disponible en:`);
+    console.log(`   - Local: http://localhost:${port}`);
+    console.log(`   - Red: http://192.168.1.39:${port}`);
+    console.log(`   - Cualquier IP: http://0.0.0.0:${port}`);
+    console.log(`🔌 Socket.IO disponible en ws://${host}:${port}`);
     console.log(`⚠️  MODO DESARROLLO - Seguridad relajada para desarrollo`);
+    console.log(`🔧 Para acceso desde red local, usa: http://192.168.1.39:${port}`);
   });
 }).catch((error) => {
   console.error('❌ Error iniciando servidor:', error);

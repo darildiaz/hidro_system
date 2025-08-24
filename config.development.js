@@ -13,7 +13,7 @@ module.exports = {
   // Configuración del servidor para desarrollo
   server: {
     port: process.env.PORT || 3000,
-    host: 'localhost' // Solo localhost para desarrollo
+    host: '0.0.0.0' // Permitir acceso desde cualquier IP en desarrollo
   },
 
   // Configuración de seguridad relajada para desarrollo
