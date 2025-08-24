@@ -87,24 +87,12 @@ async function initializeSystem() {
 }
 
 // Rutas de la aplicación
-app.get('/', async (req, res) => {
-  try {
-    const systemInfo = gpioController.getSystemInfo();
-    const schedulerStatus = scheduler.getStatus();
-    
-    // Obtener datos recientes de sensores
-    const recentReadings = await database.getRecentSensorReadings(10);
-    
-    res.render('index', {
-      title: 'Sistema de Hidroponía Automatizado',
-      systemInfo,
-      schedulerStatus,
-      recentReadings
-    });
-  } catch (error) {
-    console.error('Error renderizando página principal:', error);
-    res.status(500).render('error', { error: 'Error interno del servidor' });
-  }
+app.get('/', (req, res) => {
+    res.render('index', { title: 'Dashboard - Sistema de Hidroponía' });
+});
+
+app.get('/scheduler', (req, res) => {
+    res.render('scheduler', { title: 'Programador - Sistema de Hidroponía' });
 });
 
 app.get('/programacion', async (req, res) => {
@@ -395,6 +383,79 @@ app.post('/api/system/control', async (req, res) => {
     console.error('Error en control del sistema:', error);
     res.status(500).json({ error: error.message });
   }
+});
+
+// APIs del Programador
+app.get('/api/scheduler/schedules', async (req, res) => {
+    try {
+        const schedules = await database.getSchedules();
+        res.json({ success: true, schedules: schedules });
+    } catch (error) {
+        console.error('Error obteniendo horarios:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/scheduler/schedules', async (req, res) => {
+    try {
+        const { schedules } = req.body;
+        await database.saveSchedules(schedules);
+        res.json({ success: true, message: 'Horarios guardados correctamente' });
+    } catch (error) {
+        console.error('Error guardando horarios:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/scheduler/conditions', async (req, res) => {
+    try {
+        const conditions = await database.getConditions();
+        res.json({ success: true, conditions: conditions });
+    } catch (error) {
+        console.error('Error obteniendo condiciones:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/scheduler/conditions', async (req, res) => {
+    try {
+        const { conditions } = req.body;
+        await database.saveConditions(conditions);
+        res.json({ success: true, message: 'Condiciones guardadas correctamente' });
+    } catch (error) {
+        console.error('Error guardando condiciones:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/scheduler/start', async (req, res) => {
+    try {
+        await scheduler.startScheduledTasks();
+        res.json({ success: true, message: 'Programador iniciado' });
+    } catch (error) {
+        console.error('Error iniciando programador:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.post('/api/scheduler/stop', async (req, res) => {
+    try {
+        await scheduler.stopScheduledTasks();
+        res.json({ success: true, message: 'Programador detenido' });
+    } catch (error) {
+        console.error('Error deteniendo programador:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+app.get('/api/scheduler/status', async (req, res) => {
+    try {
+        const status = scheduler.getStatus();
+        res.json({ success: true, status: status });
+    } catch (error) {
+        console.error('Error obteniendo estado del programador:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
 // Manejo de errores 404

@@ -21,16 +21,32 @@
     <div class="hero-section">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-8">
+                <div class="col-lg-6">
                     <h1 class="display-4 fw-bold">
                         <i class="bi bi-droplet-fill"></i>
                         Sistema de Hidroponía Automatizado
                     </h1>
                     <p class="lead">Control inteligente de cultivos hidropónicos con monitoreo en tiempo real</p>
                 </div>
-                <div class="col-lg-4 text-center">
-                    <div class="status-indicator online"></div>
-                    <span class="text-white fw-bold">Sistema Online</span>
+                <div class="col-lg-6 text-center">
+                    <div class="d-flex flex-column gap-3">
+                        <!-- Reloj del Sistema -->
+                        <div class="system-clock">
+                            <div class="clock-time" id="system-clock">--:--:--</div>
+                            <div class="clock-date" id="system-date">--/--/----</div>
+                        </div>
+                        
+                        <!-- Estado del Sistema -->
+                        <div class="d-flex justify-content-center align-items-center gap-2">
+                            <div class="status-indicator online"></div>
+                            <span class="text-white fw-bold">Sistema Online</span>
+                        </div>
+                        
+                        <!-- Botón del Programador -->
+                        <a href="/scheduler" class="btn btn-hidro-outline btn-sm">
+                            <i class="bi bi-clock"></i> Programador
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -527,6 +543,7 @@
         // Inicializar cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {
             initChart();
+            initSystemClock();
             
             // Simular datos iniciales si no hay Socket.IO
             if (!socket) {
@@ -545,6 +562,37 @@
                 document.getElementById('system-uptime').textContent = `${hours}h ${minutes}m`;
             }, 1000);
         });
+
+        // Inicializar reloj del sistema
+        function initSystemClock() {
+            updateClock();
+            // Actualizar cada segundo
+            setInterval(updateClock, 1000);
+        }
+
+        // Actualizar reloj
+        function updateClock() {
+            const now = new Date();
+            
+            // Formatear hora
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            
+            // Formatear fecha
+            const day = now.getDate().toString().padStart(2, '0');
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const year = now.getFullYear();
+            const dateString = `${day}/${month}/${year}`;
+            
+            // Actualizar elementos del DOM
+            const clockElement = document.getElementById('system-clock');
+            const dateElement = document.getElementById('system-date');
+            
+            if (clockElement) clockElement.textContent = timeString;
+            if (dateElement) dateElement.textContent = dateString;
+        }
     </script>
 </body>
 </html> 

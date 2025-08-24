@@ -103,6 +103,28 @@ class Database {
         value TEXT NOT NULL,
         description TEXT,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // Tabla de horarios programados
+      `CREATE TABLE IF NOT EXISTS schedules (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        releId INTEGER NOT NULL,
+        time TEXT NOT NULL,
+        duration INTEGER NOT NULL,
+        days TEXT NOT NULL,
+        enabled INTEGER DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // Tabla de condiciones para activación automática
+      `CREATE TABLE IF NOT EXISTS conditions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        releId INTEGER NOT NULL,
+        condition_type TEXT NOT NULL,
+        value REAL NOT NULL,
+        duration INTEGER DEFAULT 15,
+        enabled INTEGER DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )`
     ];
 
@@ -446,6 +468,149 @@ class Database {
         }
       });
     }
+  }
+
+  // Métodos para el Programador
+  async getSchedules() {
+      try {
+          const schedules = await this.db.all(`
+              SELECT releId, time, duration, days, enabled, created_at 
+              FROM schedules 
+              ORDER BY releId, time
+          `);
+          
+          // Agrupar por relé
+          const groupedSchedules = { 1: [], 2: [], 3: [], 4: [] };
+          schedules.forEach(schedule => {
+              if (groupedSchedules[schedule.releId]) {
+                  groupedSchedules[schedule.releId].push({
+                      time: schedule.time,
+                      duration: schedule.duration,
+                      days: JSON.parse(schedule.days || '[]'),
+                      enabled: schedule.enabled === 1
+                  });
+              }
+          });
+          
+          return groupedSchedules;
+      } catch (error) {
+          console.error('Error obteniendo horarios:', error);
+          return { 1: [], 2: [], 3: [], 4: [] };
+      }
+  }
+
+  async saveSchedules(schedules) {
+      try {
+          // Limpiar horarios existentes
+          await this.db.run('DELETE FROM schedules');
+          
+          // Insertar nuevos horarios
+          for (let releId = 1; releId <= 4; releId++) {
+              if (schedules[releId] && Array.isArray(schedules[releId])) {
+                  for (const schedule of schedules[releId]) {
+                      await this.db.run(`
+                          INSERT INTO schedules (releId, time, duration, days, enabled, created_at)
+                          VALUES (?, ?, ?, ?, ?, datetime('now'))
+                      `, [
+                          releId,
+                          schedule.time,
+                          schedule.duration,
+                          JSON.stringify(schedule.days || []),
+                          schedule.enabled ? 1 : 0
+                      ]);
+                  }
+              }
+          }
+          
+          return true;
+      } catch (error) {
+          console.error('Error guardando horarios:', error);
+          throw error;
+      }
+  }
+
+  async getConditions() {
+      try {
+          const conditions = await this.db.all(`
+              SELECT releId, condition_type, value, duration, enabled
+              FROM conditions 
+              ORDER BY releId, condition_type
+          `);
+          
+          // Agrupar por relé
+          const groupedConditions = { 1: {}, 2: {}, 3: {}, 4: {} };
+          conditions.forEach(condition => {
+              if (groupedConditions[condition.releId]) {
+                  groupedConditions[condition.releId][condition.condition_type] = {
+                      value: condition.value,
+                      duration: condition.duration,
+                      enabled: condition.enabled === 1
+                  };
+              }
+          });
+          
+          return groupedConditions;
+      } catch (error) {
+          console.error('Error obteniendo condiciones:', error);
+          return { 1: {}, 2: {}, 3: {}, 4: {} };
+      }
+  }
+
+  async saveConditions(conditions) {
+      try {
+          // Limpiar condiciones existentes
+          await this.db.run('DELETE FROM conditions');
+          
+          // Insertar nuevas condiciones
+          for (let releId = 1; releId <= 4; releId++) {
+              if (conditions[releId]) {
+                  const releConditions = conditions[releId];
+                  
+                  // Relé 1 - Temperatura máxima
+                  if (releConditions.tempMax !== undefined) {
+                      await this.db.run(`
+                          INSERT INTO conditions (releId, condition_type, value, duration, enabled, created_at)
+                          VALUES (?, 'tempMax', ?, ?, 1, datetime('now'))
+                      `, [releId, releConditions.tempMax, releConditions.tempTime || 30]);
+                  }
+                  
+                  // Relé 2 - Humedad mínima
+                  if (releConditions.humidityMin !== undefined) {
+                      await this.db.run(`
+                          INSERT INTO conditions (releId, condition_type, value, duration, enabled, created_at)
+                          VALUES (?, 'humidityMin', ?, ?, 1, datetime('now'))
+                      `, [releId, releConditions.humidityMin, releConditions.humidityTime || 15]);
+                  }
+                  
+                  // Relé 3 - Temperatura y humedad máxima
+                  if (releConditions.tempMax !== undefined) {
+                      await this.db.run(`
+                          INSERT INTO conditions (releId, condition_type, value, duration, enabled, created_at)
+                          VALUES (?, 'tempMax', ?, 15, 1, datetime('now'))
+                      `, [releId, releConditions.tempMax]);
+                  }
+                  if (releConditions.humidityMax !== undefined) {
+                      await this.db.run(`
+                          INSERT INTO conditions (releId, condition_type, value, duration, enabled, created_at)
+                          VALUES (?, 'humidityMax', ?, 15, 1, datetime('now'))
+                      `, [releId, releConditions.humidityMax]);
+                  }
+                  
+                  // Relé 4 - Temperatura mínima
+                  if (releConditions.tempMin !== undefined) {
+                      await this.db.run(`
+                          INSERT INTO conditions (releId, condition_type, value, duration, enabled, created_at)
+                          VALUES (?, 'tempMin', ?, ?, 1, datetime('now'))
+                      `, [releId, releConditions.tempMin, releConditions.tempTime || 30]);
+                  }
+              }
+          }
+          
+          return true;
+      } catch (error) {
+          console.error('Error guardando condiciones:', error);
+          throw error;
+      }
   }
 
   /**

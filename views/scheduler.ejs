@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programador - Sistema de Hidroponía</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Socket.IO -->
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold">
+                        <i class="bi bi-clock"></i>
+                        Programador de Relés
+                    </h1>
+                    <p class="lead">Configura horarios y condiciones para automatizar tu sistema hidropónico</p>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <div class="d-flex flex-column gap-3">
+                        <!-- Reloj del Sistema -->
+                        <div class="system-clock">
+                            <div class="clock-time" id="system-clock">--:--:--</div>
+                            <div class="clock-date" id="system-date">--/--/----</div>
+                        </div>
+                        
+                        <a href="/" class="btn btn-hidro-outline">
+                            <i class="bi bi-arrow-left"></i> Volver al Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <!-- Programación de Relés -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="main-card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-gear"></i> Configuración de Relés</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Tabs para cada relé -->
+                        <ul class="nav nav-tabs" id="releTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="rele1-tab" data-bs-toggle="tab" data-bs-target="#rele1" type="button" role="tab">
+                                    <i class="bi bi-lightbulb text-warning"></i> Relé 1 - Iluminación
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="rele2-tab" data-bs-toggle="tab" data-bs-target="#rele2" type="button" role="tab">
+                                    <i class="bi bi-droplet-fill text-primary"></i> Relé 2 - Bomba de Agua
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="rele3-tab" data-bs-toggle="tab" data-bs-target="#rele3" type="button" role="tab">
+                                    <i class="bi bi-wind text-success"></i> Relé 3 - Ventilación
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="rele4-tab" data-bs-toggle="tab" data-bs-target="#rele4" type="button" role="tab">
+                                    <i class="bi bi-thermometer-half text-danger"></i> Relé 4 - Calefacción
+                                </button>
+                            </li>
+                        </ul>
+
+                        <!-- Contenido de los tabs -->
+                        <div class="tab-content mt-3" id="releTabsContent">
+                            <!-- Relé 1 - Iluminación -->
+                            <div class="tab-pane fade show active" id="rele1" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="fw-bold mb-3">Horarios Programados</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-hidro">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Hora</th>
+                                                        <th>Tiempo (min)</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="rele1-schedules">
+                                                    <!-- Se llena dinámicamente -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <button class="btn btn-hidro btn-sm" onclick="addSchedule(1)">
+                                            <i class="bi bi-plus-circle"></i> Agregar Horario
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6 class="fw-bold mb-3">Condiciones</h6>
+                                        <div class="mb-3">
+                                            <label class="form-label-hidro">Temperatura máxima (°C)</label>
+                                            <input type="number" class="form-control-hidro" id="rele1-temp-max" value="32" min="0" max="50" step="0.1">
+                                            <small class="text-muted">Activar si supera este valor</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label-hidro">Tiempo de activación (min)</label>
+                                            <input type="number" class="form-control-hidro" id="rele1-temp-time" value="30" min="1" max="120">
+                                            <small class="text-muted">Duración cuando se active por temperatura</small>
+                                        </div>
+                                        <button class="btn btn-hidro-outline btn-sm" onclick="saveConditions(1)">
+                                            <i class="bi bi-save"></i> Guardar Condiciones
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Relé 2 - Bomba de Agua -->
+                            <div class="tab-pane fade" id="rele2" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="fw-bold mb-3">Horarios Programados</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-hidro">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Hora</th>
+                                                        <th>Tiempo (min)</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="rele2-schedules">
+                                                    <!-- Se llena dinámicamente -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <button class="btn btn-hidro btn-sm" onclick="addSchedule(2)">
+                                            <i class="bi bi-plus-circle"></i> Agregar Horario
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6 class="fw-bold mb-3">Condiciones</h6>
+                                        <div class="mb-3">
+                                            <label class="form-label-hidro">Humedad mínima (%)</label>
+                                            <input type="number" class="form-control-hidro" id="rele2-humidity-min" value="40" min="0" max="100" step="1">
+                                            <small class="text-muted">Activar si está por debajo</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label-hidro">Tiempo de activación (min)</label>
+                                            <input type="number" class="form-control-hidro" id="rele2-humidity-time" value="15" min="1" max="60">
+                                            <small class="text-muted">Duración del riego</small>
+                                        </div>
+                                        <button class="btn btn-hidro-outline btn-sm" onclick="saveConditions(2)">
+                                            <i class="bi bi-save"></i> Guardar Condiciones
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Relé 3 - Ventilación -->
+                            <div class="tab-pane fade" id="rele3" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="fw-bold mb-3">Horarios Programados</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-hidro">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Hora</th>
+                                                        <th>Tiempo (min)</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="rele3-schedules">
+                                                    <!-- Se llena dinámicamente -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <button class="btn btn-hidro btn-sm" onclick="addSchedule(3)">
+                                            <i class="bi bi-plus-circle"></i> Agregar Horario
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6 class="fw-bold mb-3">Condiciones</h6>
+                                        <div class="mb-3">
+                                            <label class="form-label-hidro">Temperatura máxima (°C)</label>
+                                            <input type="number" class="form-control-hidro" id="rele3-temp-max" value="28" min="0" max="50" step="0.1">
+                                            <small class="text-muted">Activar ventilación si supera</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label-hidro">Humedad máxima (%)</label>
+                                            <input type="number" class="form-control-hidro" id="rele3-humidity-max" value="80" min="0" max="100" step="1">
+                                            <small class="text-muted">Activar si la humedad es muy alta</small>
+                                        </div>
+                                        <button class="btn btn-hidro-outline btn-sm" onclick="saveConditions(3)">
+                                            <i class="bi bi-save"></i> Guardar Condiciones
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Relé 4 - Calefacción -->
+                            <div class="tab-pane fade" id="rele4" role="tabpanel">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h6 class="fw-bold mb-3">Horarios Programados</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-hidro">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Hora</th>
+                                                        <th>Tiempo (min)</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="rele4-schedules">
+                                                    <!-- Se llena dinámicamente -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <button class="btn btn-hidro btn-sm" onclick="addSchedule(4)">
+                                            <i class="bi bi-plus-circle"></i> Agregar Horario
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6 class="fw-bold mb-3">Condiciones</h6>
+                                        <div class="mb-3">
+                                            <label class="form-label-hidro">Temperatura mínima (°C)</label>
+                                            <input type="number" class="form-control-hidro" id="rele4-temp-min" value="18" min="0" max="50" step="0.1">
+                                            <small class="text-muted">Activar si está por debajo</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label-hidro">Tiempo de activación (min)</label>
+                                            <input type="number" class="form-control-hidro" id="rele4-temp-time" value="30" min="1" max="120">
+                                            <small class="text-muted">Duración de la calefacción</small>
+                                        </div>
+                                        <button class="btn btn-hidro-outline btn-sm" onclick="saveConditions(4)">
+                                            <i class="bi bi-save"></i> Guardar Condiciones
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones Globales -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="main-card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-lightning"></i> Acciones del Programador</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <button class="btn btn-hidro w-100" onclick="startScheduler()">
+                                    <i class="bi bi-play-circle"></i> Iniciar Programador
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <button class="btn btn-hidro-outline w-100" onclick="stopScheduler()">
+                                    <i class="bi bi-stop-circle"></i> Detener Programador
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <button class="btn btn-hidro-outline w-100" onclick="saveAllSchedules()">
+                                    <i class="bi bi-save"></i> Guardar Todo
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <button class="btn btn-hidro-outline w-100" onclick="loadDefaultSchedules()">
+                                    <i class="bi bi-arrow-clockwise"></i> Cargar Predeterminados
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estado del Programador -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="main-card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-info-circle"></i> Estado del Programador</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <div class="status-card text-center">
+                                    <div class="card-body">
+                                        <div class="status-icon text-success">
+                                            <i class="bi bi-clock"></i>
+                                        </div>
+                                        <div class="status-value" id="active-schedules">--</div>
+                                        <div class="status-label">Horarios Activos</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="status-card text-center">
+                                    <div class="card-body">
+                                        <div class="status-icon text-info">
+                                            <i class="bi bi-thermometer-half"></i>
+                                        </div>
+                                        <div class="status-value" id="active-conditions">--</div>
+                                        <div class="status-label">Condiciones Activas</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="status-card text-center">
+                                    <div class="card-body">
+                                        <div class="status-icon text-warning">
+                                            <i class="bi bi-activity"></i>
+                                        </div>
+                                        <div class="status-value" id="next-execution">--</div>
+                                        <div class="status-label">Próxima Ejecución</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="status-card text-center">
+                                    <div class="card-body">
+                                        <div class="status-icon text-primary">
+                                            <i class="bi bi-check-circle"></i>
+                                        </div>
+                                        <div class="status-value" id="scheduler-status">--</div>
+                                        <div class="status-label">Estado</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/editar horario -->
+    <div class="modal fade" id="scheduleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content modal-hidro">
+                <div class="modal-header">
+                    <h5 class="modal-title">Configurar Horario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="scheduleForm">
+                        <input type="hidden" id="schedule-rele-id">
+                        <input type="hidden" id="schedule-index">
+                        
+                        <div class="mb-3">
+                            <label for="schedule-time" class="form-label-hidro">Hora</label>
+                            <input type="time" class="form-control-hidro" id="schedule-time" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="schedule-duration" class="form-label-hidro">Duración (minutos)</label>
+                            <input type="number" class="form-control-hidro" id="schedule-duration" min="1" max="1440" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="schedule-days" class="form-label-hidro">Días de la semana</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="day-monday" value="1">
+                                <label class="form-check-label" for="day-monday">Lunes</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="day-tuesday" value="2">
+                                <label class="form-check-label" for="day-tuesday">Martes</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="day-wednesday" value="3">
+                                <label class="form-check-label" for="day-wednesday">Miércoles</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="day-thursday" value="4">
+                                <label class="form-check-label" for="day-thursday">Jueves</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="day-friday" value="5">
+                                <label class="form-check-label" for="day-friday">Viernes</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="day-saturday" value="6">
+                                <label class="form-check-label" for="day-saturday">Sábado</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="day-sunday" value="0">
+                                <label class="form-check-label" for="day-sunday">Domingo</label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="schedule-enabled" class="form-label-hidro">Estado</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="schedule-enabled" checked>
+                                <label class="form-check-label" for="schedule-enabled">Habilitado</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-hidro" onclick="saveSchedule()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="bi bi-droplet-fill"></i> Sistema de Hidroponía</h5>
+                    <p>Programación automatizada para cultivos hidropónicos</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Desarrollado por</h5>
+                    <p><strong>Ing. Daril Díaz</strong> - 2024</p>
+                    <p><small>Programador Inteligente</small></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="/js/main.js"></script>
+    
+    <script>
+        // Variables globales
+        let schedules = {
+            1: [], // Relé 1 - Iluminación
+            2: [], // Relé 2 - Bomba de Agua
+            3: [], // Relé 3 - Ventilación
+            4: []  // Relé 4 - Calefacción
+        };
+        
+        let conditions = {
+            1: { tempMax: 32, tempTime: 30 },
+            2: { humidityMin: 40, humidityTime: 15 },
+            3: { tempMax: 28, humidityMax: 80 },
+            4: { tempMin: 18, tempTime: 30 }
+        };
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSchedules();
+            loadConditions();
+            updateSchedulerStatus();
+            updateSystemClock(); // Actualizar reloj del sistema
+        });
+
+        // Cargar horarios guardados
+        function loadSchedules() {
+            fetch('/api/scheduler/schedules')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        schedules = data.schedules;
+                        renderAllSchedules();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error cargando horarios:', error);
+                    loadDefaultSchedules();
+                });
+        }
+
+        // Cargar condiciones guardadas
+        function loadConditions() {
+            fetch('/api/scheduler/conditions')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        conditions = data.conditions;
+                        renderAllConditions();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error cargando condiciones:', error);
+                });
+        }
+
+        // Renderizar todos los horarios
+        function renderAllSchedules() {
+            for (let releId = 1; releId <= 4; releId++) {
+                renderSchedules(releId);
+            }
+        }
+
+        // Renderizar horarios de un relé específico
+        function renderSchedules(releId) {
+            const tbody = document.getElementById(`rele${releId}-schedules`);
+            if (!tbody) return;
+
+            tbody.innerHTML = '';
+            
+            schedules[releId].forEach((schedule, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${schedule.time}</td>
+                    <td>${schedule.duration}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="editSchedule(${releId}, ${index})">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteSchedule(${releId}, ${index})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Renderizar todas las condiciones
+        function renderAllConditions() {
+            // Relé 1 - Temperatura máxima
+            document.getElementById('rele1-temp-max').value = conditions[1].tempMax;
+            document.getElementById('rele1-temp-time').value = conditions[1].tempTime;
+            
+            // Relé 2 - Humedad mínima
+            document.getElementById('rele2-humidity-min').value = conditions[2].humidityMin;
+            document.getElementById('rele2-humidity-time').value = conditions[2].humidityTime;
+            
+            // Relé 3 - Temperatura y humedad
+            document.getElementById('rele3-temp-max').value = conditions[3].tempMax;
+            document.getElementById('rele3-humidity-max').value = conditions[3].humidityMax;
+            
+            // Relé 4 - Temperatura mínima
+            document.getElementById('rele4-temp-min').value = conditions[4].tempMin;
+            document.getElementById('rele4-temp-time').value = conditions[4].tempTime;
+        }
+
+        // Agregar nuevo horario
+        function addSchedule(releId) {
+            document.getElementById('schedule-rele-id').value = releId;
+            document.getElementById('schedule-index').value = '';
+            document.getElementById('schedule-time').value = '';
+            document.getElementById('schedule-duration').value = '';
+            
+            // Marcar todos los días
+            for (let i = 0; i <= 6; i++) {
+                document.getElementById(`day-monday`).checked = true;
+                document.getElementById(`day-tuesday`).checked = true;
+                document.getElementById(`day-wednesday`).checked = true;
+                document.getElementById(`day-thursday`).checked = true;
+                document.getElementById(`day-friday`).checked = true;
+                document.getElementById(`day-saturday`).checked = true;
+                document.getElementById(`day-sunday`).checked = true;
+            }
+            
+            const modal = new bootstrap.Modal(document.getElementById('scheduleModal'));
+            modal.show();
+        }
+
+        // Editar horario existente
+        function editSchedule(releId, index) {
+            const schedule = schedules[releId][index];
+            if (!schedule) return;
+
+            document.getElementById('schedule-rele-id').value = releId;
+            document.getElementById('schedule-index').value = index;
+            document.getElementById('schedule-time').value = schedule.time;
+            document.getElementById('schedule-duration').value = schedule.duration;
+            document.getElementById('schedule-enabled').checked = schedule.enabled !== false;
+            
+            // Marcar días específicos
+            const days = schedule.days || [0,1,2,3,4,5,6];
+            document.getElementById('day-monday').checked = days.includes(1);
+            document.getElementById('day-tuesday').checked = days.includes(2);
+            document.getElementById('day-wednesday').checked = days.includes(3);
+            document.getElementById('day-thursday').checked = days.includes(4);
+            document.getElementById('day-friday').checked = days.includes(5);
+            document.getElementById('day-saturday').checked = days.includes(6);
+            document.getElementById('day-sunday').checked = days.includes(0);
+            
+            const modal = new bootstrap.Modal(document.getElementById('scheduleModal'));
+            modal.show();
+        }
+
+        // Eliminar horario
+        function deleteSchedule(releId, index) {
+            if (confirm('¿Estás seguro de que quieres eliminar este horario?')) {
+                schedules[releId].splice(index, 1);
+                renderSchedules(releId);
+                saveSchedules();
+            }
+        }
+
+        // Guardar horario
+        function saveSchedule() {
+            const releId = parseInt(document.getElementById('schedule-rele-id').value);
+            const index = document.getElementById('schedule-index').value;
+            const time = document.getElementById('schedule-time').value;
+            const duration = parseInt(document.getElementById('schedule-duration').value);
+            const enabled = document.getElementById('schedule-enabled').checked;
+            
+            // Obtener días seleccionados
+            const days = [];
+            if (document.getElementById('day-monday').checked) days.push(1);
+            if (document.getElementById('day-tuesday').checked) days.push(2);
+            if (document.getElementById('day-wednesday').checked) days.push(3);
+            if (document.getElementById('day-thursday').checked) days.push(4);
+            if (document.getElementById('day-friday').checked) days.push(5);
+            if (document.getElementById('day-saturday').checked) days.push(6);
+            if (document.getElementById('day-sunday').checked) days.push(0);
+            
+            if (!time || !duration || days.length === 0) {
+                alert('Por favor completa todos los campos');
+                return;
+            }
+            
+            const schedule = {
+                time: time,
+                duration: duration,
+                days: days,
+                enabled: enabled
+            };
+            
+            if (index === '') {
+                // Nuevo horario
+                schedules[releId].push(schedule);
+            } else {
+                // Editar horario existente
+                schedules[releId][parseInt(index)] = schedule;
+            }
+            
+            renderSchedules(releId);
+            saveSchedules();
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('scheduleModal'));
+            modal.hide();
+        }
+
+        // Guardar horarios
+        function saveSchedules() {
+            fetch('/api/scheduler/schedules', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ schedules: schedules })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Horarios guardados correctamente', 'success');
+                } else {
+                    showNotification(`Error: ${data.error}`, 'danger');
+                }
+            })
+            .catch(error => {
+                showNotification(`Error: ${error.message}`, 'danger');
+            });
+        }
+
+        // Guardar condiciones
+        function saveConditions(releId) {
+            switch (releId) {
+                case 1:
+                    conditions[1].tempMax = parseFloat(document.getElementById('rele1-temp-max').value);
+                    conditions[1].tempTime = parseInt(document.getElementById('rele1-temp-time').value);
+                    break;
+                case 2:
+                    conditions[2].humidityMin = parseInt(document.getElementById('rele2-humidity-min').value);
+                    conditions[2].humidityTime = parseInt(document.getElementById('rele2-humidity-time').value);
+                    break;
+                case 3:
+                    conditions[3].tempMax = parseFloat(document.getElementById('rele3-temp-max').value);
+                    conditions[3].humidityMax = parseInt(document.getElementById('rele3-humidity-max').value);
+                    break;
+                case 4:
+                    conditions[4].tempMin = parseFloat(document.getElementById('rele4-temp-min').value);
+                    conditions[4].tempTime = parseInt(document.getElementById('rele4-temp-time').value);
+                    break;
+            }
+            
+            saveConditionsToServer();
+        }
+
+        // Guardar condiciones en el servidor
+        function saveConditionsToServer() {
+            fetch('/api/scheduler/conditions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ conditions: conditions })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Condiciones guardadas correctamente', 'success');
+                } else {
+                    showNotification(`Error: ${data.error}`, 'danger');
+                }
+            })
+            .catch(error => {
+                showNotification(`Error: ${error.message}`, 'danger');
+            });
+        }
+
+        // Cargar horarios predeterminados
+        function loadDefaultSchedules() {
+            // Relé 1 - Iluminación (ejemplo de tu programación)
+            schedules[1] = [
+                { time: '01:00', duration: 15, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '06:30', duration: 15, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '07:45', duration: 15, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '08:30', duration: 15, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '09:00', duration: 15, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '09:30', duration: 15, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '10:30', duration: 30, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '11:00', duration: 30, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '11:45', duration: 60, days: [0,1,2,3,4,5,6], enabled: true }
+            ];
+            
+            // Relé 2 - Bomba de Agua
+            schedules[2] = [
+                { time: '01:00', duration: 15, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '06:30', duration: 15, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '07:45', duration: 15, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '08:30', duration: 15, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '09:00', duration: 15, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '09:30', duration: 15, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '10:30', duration: 30, days: [0,1,2,3,4,5,6], enabled: true },
+                { time: '11:00', duration: 30, days: [0,1,2,3,4,5,6], enabled: true }
+            ];
+            
+            // Relé 3 - Ventilación (activación por condiciones)
+            schedules[3] = [];
+            
+            // Relé 4 - Calefacción (activación por condiciones)
+            schedules[4] = [];
+            
+            renderAllSchedules();
+            showNotification('Horarios predeterminados cargados', 'success');
+        }
+
+        // Guardar todos los horarios
+        function saveAllSchedules() {
+            saveSchedules();
+            saveConditionsToServer();
+        }
+
+        // Iniciar programador
+        function startScheduler() {
+            fetch('/api/scheduler/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Programador iniciado correctamente', 'success');
+                    updateSchedulerStatus();
+                } else {
+                    showNotification(`Error: ${data.error}`, 'danger');
+                }
+            })
+            .catch(error => {
+                showNotification(`Error: ${error.message}`, 'danger');
+            });
+        }
+
+        // Detener programador
+        function stopScheduler() {
+            fetch('/api/scheduler/stop', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Programador detenido correctamente', 'info');
+                    updateSchedulerStatus();
+                } else {
+                    showNotification(`Error: ${data.error}`, 'danger');
+                }
+            })
+            .catch(error => {
+                showNotification(`Error: ${error.message}`, 'danger');
+            });
+        }
+
+        // Actualizar estado del programador
+        function updateSchedulerStatus() {
+            fetch('/api/scheduler/status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('active-schedules').textContent = data.status.activeSchedules || 0;
+                        document.getElementById('active-conditions').textContent = data.status.activeConditions || 0;
+                        document.getElementById('next-execution').textContent = data.status.nextExecution || '--';
+                        document.getElementById('scheduler-status').textContent = data.status.running ? 'Activo' : 'Inactivo';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error obteniendo estado:', error);
+                });
+        }
+
+        // Actualizar estado cada 5 segundos
+        setInterval(updateSchedulerStatus, 5000);
+
+        // Actualizar reloj del sistema
+        function updateSystemClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const date = String(now.getDate()).padStart(2, '0') + '/' + String(now.getMonth() + 1).padStart(2, '0') + '/' + String(now.getFullYear());
+
+            document.getElementById('system-clock').textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('system-date').textContent = date;
+        }
+
+        // Actualizar reloj cada segundo
+        setInterval(updateSystemClock, 1000);
+    </script>
+</body>
+</html> 
