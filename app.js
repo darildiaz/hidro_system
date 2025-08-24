@@ -95,6 +95,14 @@ app.get('/scheduler', (req, res) => {
     res.render('scheduler', { title: 'Programador - Sistema de Hidroponía' });
 });
 
+app.get('/profile', (req, res) => {
+    res.render('profile', { title: 'Perfil de Usuario - Sistema de Hidroponía' });
+});
+
+app.get('/security', (req, res) => {
+    res.render('security', { title: 'Seguridad - Sistema de Hidroponía' });
+});
+
 app.get('/programacion', async (req, res) => {
   try {
     const activeSchedules = await database.getActiveSchedules();

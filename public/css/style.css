@@ -642,4 +642,139 @@ input:checked + .rele-slider:before {
 .progress-hidro .progress-bar {
   background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
   border-radius: 0.5rem;
+}
+
+/* Estilos para páginas de usuario */
+.user-avatar {
+  margin-bottom: 1rem;
+}
+
+.user-info {
+  text-align: left;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: var(--light-bg);
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.info-item:hover {
+  background: var(--light-green);
+  transform: translateX(5px);
+}
+
+.info-item i {
+  margin-right: 1rem;
+  color: var(--primary-green);
+  font-size: 1.2rem;
+  width: 20px;
+}
+
+.info-item span {
+  font-weight: 500;
+  color: var(--dark-bg);
+}
+
+/* Estilos para seguridad */
+.security-status {
+  margin-bottom: 1.5rem;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: var(--light-bg);
+  border-radius: 0.5rem;
+}
+
+.status-item i {
+  margin-right: 1rem;
+  font-size: 1.2rem;
+}
+
+.status-item span {
+  font-weight: 500;
+}
+
+.security-tips {
+  list-style: none;
+  padding: 0;
+}
+
+.security-tips li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--light-green);
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.security-tips li:before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--primary-green);
+  font-weight: bold;
+}
+
+.security-tips li:last-child {
+  border-bottom: none;
+}
+
+/* Estilos para formularios de seguridad */
+.password-strength {
+  margin-top: 1rem;
+}
+
+.progress-hidro {
+  height: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Estilos para historial de sesiones */
+.table-hidro tbody tr {
+  transition: all 0.3s ease;
+}
+
+.table-hidro tbody tr:hover {
+  background-color: var(--light-green);
+  transform: scale(1.01);
+}
+
+.table-hidro .badge {
+  font-size: 0.8rem;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Responsive para páginas de usuario */
+@media (max-width: 768px) {
+  .user-info {
+    text-align: center;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .info-item i {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+  
+  .security-tips li {
+    padding-left: 0;
+    text-align: center;
+  }
+  
+  .security-tips li:before {
+    position: static;
+    margin-right: 0.5rem;
+  }
 } 
