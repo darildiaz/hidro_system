@@ -37,6 +37,47 @@ app.use(helmet({
   crossOriginResourcePolicy: false
 }));
 
+// Middleware para forzar HTTP y prevenir HTTPS
+app.use((req, res, next) => {
+    // Forzar HTTP en todas las respuestas
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Origin-Agent-Cluster', '?0');
+    
+    // Prevenir HSTS
+    res.setHeader('Strict-Transport-Security', 'max-age=0');
+    
+    // Forzar protocolo HTTP
+    res.setHeader('Content-Security-Policy', "upgrade-insecure-requests");
+    res.setHeader('Upgrade-Insecure-Requests', '0');
+    
+    // Si la petición viene por HTTPS, redirigir a HTTP
+    if (req.headers['x-forwarded-proto'] === 'https' || req.secure) {
+        const httpUrl = `http://${req.headers.host}${req.url}`;
+        return res.redirect(httpUrl);
+    }
+    
+    next();
+});
+
+// Middleware para interceptar peticiones HTTPS
+app.use((req, res, next) => {
+    // Verificar si la petición es HTTPS
+    const isHttps = req.headers['x-forwarded-proto'] === 'https' || req.secure;
+    
+    if (isHttps) {
+        // Log de intento de acceso HTTPS
+        console.log(`🚫 Intento de acceso HTTPS bloqueado: ${req.method} ${req.url}`);
+        
+        // Redirigir a HTTP
+        const httpUrl = `http://${req.headers.host}${req.url}`;
+        return res.redirect(httpUrl);
+    }
+    
+    next();
+});
+
 // Configurar middleware
 app.use(compression());
 app.use(cors({

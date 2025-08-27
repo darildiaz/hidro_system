@@ -467,7 +467,7 @@ function saveSchedule(valveId, form) {
         enabled: 1
     };
 
-    fetch('/api/scheduler/schedules', {
+    fetch('http://192.168.1.39:3000/api/scheduler/schedules', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(schedule)
@@ -498,7 +498,7 @@ function saveCondition(valveId, form) {
         enabled: 1
     };
 
-    fetch('/api/scheduler/conditions', {
+    fetch('http://192.168.1.39:3000/api/scheduler/conditions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(condition)
@@ -520,7 +520,7 @@ function saveCondition(valveId, form) {
 
 // ===== CARGAR PROGRAMACIONES =====
 function loadSchedules() {
-    fetch('/api/scheduler/schedules')
+    fetch('http://192.168.1.39:3000/api/scheduler/schedules')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -534,7 +534,7 @@ function loadSchedules() {
 
 // ===== CARGAR CONDICIONES =====
 function loadConditions() {
-    fetch('/api/scheduler/conditions')
+    fetch('http://192.168.1.39:3000/api/scheduler/conditions')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -580,7 +580,7 @@ function displayConditions(conditions) {
 
 // ===== CONTROL DEL PROGRAMADOR =====
 function startScheduler() {
-    fetch('/api/scheduler/start', { method: 'POST' })
+    fetch('http://192.168.1.39:3000/api/scheduler/start', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -597,7 +597,7 @@ function startScheduler() {
 }
 
 function stopScheduler() {
-    fetch('/api/scheduler/stop', { method: 'POST' })
+    fetch('http://192.168.1.39:3000/api/scheduler/stop', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
             if (data.success) {

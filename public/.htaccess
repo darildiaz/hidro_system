@@ -1,26 +1,37 @@
-# Forzar HTTP y prevenir HTTPS
-RewriteEngine On
+# ===== FORZAR PROTOCOLO HTTP Y PREVENIR HTTPS =====
 
-# Redirigir HTTPS a HTTP
+# Redirigir HTTPS a HTTP de manera agresiva
+RewriteEngine On
 RewriteCond %{HTTPS} on
+RewriteRule ^(.*)$ http://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Forzar HTTP en todas las URLs
+RewriteCond %{SERVER_PORT} 443
 RewriteRule ^(.*)$ http://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
 # Prevenir acceso HTTPS
 RewriteCond %{HTTPS} on
 RewriteRule .* - [F]
 
-# Headers de seguridad
-Header always set X-Content-Type-Options nosniff
-Header always set X-Frame-Options DENY
+# Headers de seguridad para desarrollo local
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "DENY"
 Header always set X-XSS-Protection "1; mode=block"
 Header always set Origin-Agent-Cluster "?0"
 
-# Prevenir upgrade automático a HTTPS
+# Forzar protocolo HTTP en headers
 Header always set Content-Security-Policy "upgrade-insecure-requests"
 
-# Cache para recursos estáticos
+# Prevenir HSTS (HTTP Strict Transport Security)
+Header always unset Strict-Transport-Security
+
+# Prevenir upgrade a HTTPS
+Header always set Upgrade-Insecure-Requests "0"
+
+# Cache y compresión para recursos estáticos
 <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg)$">
     Header set Cache-Control "max-age=31536000, public"
+    Header set Vary "Accept-Encoding"
 </FilesMatch>
 
 # Compresión GZIP
@@ -34,4 +45,20 @@ Header always set Content-Security-Policy "upgrade-insecure-requests"
     AddOutputFilterByType DEFLATE application/rss+xml
     AddOutputFilterByType DEFLATE application/javascript
     AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+# Prevenir acceso a archivos sensibles
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|inc|bak)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Configuración específica para desarrollo
+<IfModule mod_rewrite.c>
+    # Permitir acceso desde cualquier IP en desarrollo
+    RewriteCond %{HTTP_HOST} ^192\.168\.1\.39$ [NC]
+    RewriteRule .* - [E=DEVELOPMENT:1]
+    
+    # Headers específicos para desarrollo
+    Header always set X-Development-Mode "true" env=DEVELOPMENT
 </IfModule> 

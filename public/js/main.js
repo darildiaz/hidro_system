@@ -8,9 +8,26 @@
 
 // ===== FORZAR PROTOCOLO HTTP =====
 function forceHttpProtocol() {
+    // Redirigir inmediatamente si estamos en HTTPS
     if (window.location.protocol === 'https:') {
-        window.location.href = window.location.href.replace('https:', 'http:');
+        const newUrl = window.location.href.replace('https:', 'http:');
+        window.location.replace(newUrl);
+        return;
     }
+    
+    // Verificar que todos los enlaces sean HTTP
+    document.querySelectorAll('a[href]').forEach(link => {
+        if (link.href.startsWith('https:')) {
+            link.href = link.href.replace('https:', 'http:');
+        }
+    });
+    
+    // Verificar que todos los formularios sean HTTP
+    document.querySelectorAll('form[action]').forEach(form => {
+        if (form.action.startsWith('https:')) {
+            form.action = form.action.replace('https:', 'http:');
+        }
+    });
 }
 
 // ===== PREVENIR ENLACES HTTPS =====
@@ -31,6 +48,65 @@ function preventHttpsLinks() {
             e.target.action = e.target.action.replace('https:', 'http:');
             e.target.submit();
         }
+    });
+
+    // Interceptar todas las peticiones fetch para forzar HTTP
+    const originalFetch = window.fetch;
+    window.fetch = function(url, options) {
+        if (typeof url === 'string' && url.startsWith('https:')) {
+            url = url.replace('https:', 'http:');
+        }
+        return originalFetch(url, options);
+    };
+
+    // Interceptar todas las peticiones XMLHttpRequest para forzar HTTP
+    const originalXHROpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function(method, url, ...args) {
+        if (typeof url === 'string' && url.startsWith('https:')) {
+            url = url.replace('https:', 'http:');
+        }
+        return originalXHROpen.call(this, method, url, ...args);
+    };
+
+    // Observar cambios en el DOM para interceptar nuevos enlaces
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList') {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.nodeType === 1) { // Element node
+                        // Verificar enlaces
+                        if (node.tagName === 'A' && node.href && node.href.startsWith('https:')) {
+                            node.href = node.href.replace('https:', 'http:');
+                        }
+                        // Verificar formularios
+                        if (node.tagName === 'FORM' && node.action && node.action.startsWith('https:')) {
+                            node.action = node.action.replace('https:', 'http:');
+                        }
+                        // Verificar elementos hijos
+                        const links = node.querySelectorAll ? node.querySelectorAll('a[href]') : [];
+                        const forms = node.querySelectorAll ? node.querySelectorAll('form[action]') : [];
+                        
+                        links.forEach(link => {
+                            if (link.href.startsWith('https:')) {
+                                link.href = link.href.replace('https:', 'http:');
+                            }
+                        });
+                        
+                        forms.forEach(form => {
+                            if (form.action.startsWith('https:')) {
+                                form.action = form.action.replace('https:', 'http:');
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    // Iniciar observación
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
     });
 }
 
