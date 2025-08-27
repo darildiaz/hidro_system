@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title>Sistema de Hidroponía</title>
     
     <!-- Meta tags para prevenir HTTPS -->
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
@@ -23,107 +23,40 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <!-- Barra de Navegación Moderna -->
-    <nav class="navbar navbar-expand-lg fixed-top modern-navbar">
+    <!-- Barra de Navegación Verde -->
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <!-- Logo y Nombre -->
-            <a class="navbar-brand modern-brand" href="/">
-                <div class="brand-logo">
-                    <i class="bi bi-droplet-fill"></i>
-                </div>
-                <div class="brand-text">
-                    <span class="brand-title">HidroSystem</span>
-                    <span class="brand-subtitle">Automation</span>
-                </div>
+            <a class="navbar-brand" href="/">
+                🌱 AutoHidro
             </a>
-
-            <!-- Botón Toggle para móvil -->
-            <button class="navbar-toggler modern-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="toggler-icon"></span>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
             </button>
-
-            <!-- Menú de Navegación -->
+            
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto modern-nav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link modern-link active" href="/">
-                            <div class="link-icon">
-                                <i class="bi bi-house-door-fill"></i>
-                            </div>
-                            <span class="link-text">Dashboard</span>
-                        </a>
+                        <a class="nav-link active" href="/">🏠 Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link modern-link" href="/scheduler">
-                            <div class="link-icon">
-                                <i class="bi bi-clock-history"></i>
-                            </div>
-                            <span class="link-text">Programador</span>
-                        </a>
+                        <a class="nav-link" href="/scheduler">📅 Programador</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link modern-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <div class="link-icon">
-                                <i class="bi bi-gear-fill"></i>
-                            </div>
-                            <span class="link-text">Configuración</span>
-                        </a>
-                        <ul class="dropdown-menu modern-dropdown">
-                            <li class="dropdown-header">Configuración del Sistema</li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-thermometer-half"></i> Sensores</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-toggle-on"></i> Relés</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-calendar-event"></i> Horarios</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-database"></i> Base de Datos</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link modern-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <div class="link-icon">
-                                <i class="bi bi-graph-up-arrow"></i>
-                            </div>
-                            <span class="link-text">Monitoreo</span>
-                        </a>
-                        <ul class="dropdown-menu modern-dropdown">
-                            <li class="dropdown-header">Estado del Sistema</li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-speedometer2"></i> Estado Actual</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history"></i> Histórico</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-text"></i> Reportes</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link modern-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <div class="link-icon">
-                                <i class="bi bi-tools"></i>
-                            </div>
-                            <span class="link-text">Herramientas</span>
-                        </a>
-                        <ul class="dropdown-menu modern-dropdown">
-                            <li class="dropdown-header">Utilidades</li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-play-circle"></i> Pruebas</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-clockwise"></i> Reiniciar</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-question-circle"></i> Ayuda</a></li>
-                        </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logs">📋 Logs</a>
                     </li>
                 </ul>
-
-                <!-- Menú del Usuario -->
+                
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link modern-link user-profile" href="#" role="button" data-bs-toggle="dropdown">
-                            <div class="user-avatar">
-                                <i class="bi bi-person-circle-fill"></i>
-                            </div>
-                            <div class="user-info">
-                                <span class="user-name">Ing. Daril Díaz</span>
-                                <span class="user-role">Administrador</span>
-                            </div>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            👤 Usuario
                         </a>
-                        <ul class="dropdown-menu modern-dropdown user-dropdown">
-                            <li class="dropdown-header">Mi Cuenta</li>
-                            <li><a class="dropdown-item" href="/profile"><i class="bi bi-person"></i> Perfil</a></li>
-                            <li><a class="dropdown-item" href="/security"><i class="bi bi-shield-lock"></i> Seguridad</a></li>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/profile">👤 Perfil</a></li>
+                            <li><a class="dropdown-item" href="/security">🔒 Seguridad</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">🚪 Cerrar Sesión</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -131,258 +64,110 @@
         </div>
     </nav>
 
-    <!-- Espaciador para el contenido debajo de la navbar fija -->
-    <div style="height: 80px;"></div>
+    <div class="container">
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <h1>🌱 AutoHidro</h1>
+            <p class="subtitle">Sistema de Control de Hidroponia Inteligente</p>
+        </div>
 
-    <!-- Hero Section -->
-    <div class="hero-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="display-4 fw-bold">
-                        <i class="bi bi-droplet-fill"></i>
-                        Sistema de Hidroponía Automatizado
-                    </h1>
-                    <p class="lead">Control inteligente de cultivos hidropónicos con monitoreo en tiempo real</p>
+        <!-- ===== RELOJ DEL SISTEMA ===== -->
+        <div class="system-clock">
+            <div class="clock-time" id="clock-time">--:--:--</div>
+            <div class="clock-date" id="clock-date">--/--/----</div>
+        </div>
+
+        <!-- ===== CONTROL DE RELÉS/VÁLVULAS ===== -->
+        <div class="section">
+            <h3>💧 Control de Válvulas de Riego</h3>
+            <div class="relay-grid">
+                <div class="relay-item">
+                    <div class="relay-title">💧 Válvula 1</div>
+                    <div class="relay-status" id="rele1-status">Desconocido</div>
+                    <button class="btn btn-on" onclick="controlRele(1, true)">ON</button>
+                    <button class="btn btn-off" onclick="controlRele(1, false)">OFF</button>
                 </div>
-                <div class="col-lg-6 text-center">
-                    <div class="d-flex flex-column gap-3">
-                        <!-- Reloj del Sistema -->
-                        <div class="system-clock">
-                            <div class="clock-time" id="system-clock">--:--:--</div>
-                            <div class="clock-date" id="system-date">--/--/----</div>
-                        </div>
-                        
-                        <!-- Estado del Sistema -->
-                        <div class="d-flex justify-content-center align-items-center gap-2">
-                            <div class="status-indicator online"></div>
-                            <span class="text-white fw-bold">Sistema Online</span>
-                        </div>
-                        
-                        <!-- Botón del Programador -->
-                        <a href="/scheduler" class="btn btn-hidro-outline">
-                            <i class="bi bi-clock"></i> Programador
-                        </a>
-                    </div>
+                
+                <div class="relay-item">
+                    <div class="relay-title">💧 Válvula 2</div>
+                    <div class="relay-status" id="rele2-status">Desconocido</div>
+                    <button class="btn btn-on" onclick="controlRele(2, true)">ON</button>
+                    <button class="btn btn-off" onclick="controlRele(2, false)">OFF</button>
+                </div>
+                
+                <div class="relay-item">
+                    <div class="relay-title">💧 Válvula 3</div>
+                    <div class="relay-status" id="rele3-status">Desconocido</div>
+                    <button class="btn btn-on" onclick="controlRele(3, true)">ON</button>
+                    <button class="btn btn-off" onclick="controlRele(3, false)">OFF</button>
+                </div>
+                
+                <div class="relay-item">
+                    <div class="relay-title">💧 Válvula 4</div>
+                    <div class="relay-status" id="rele4-status">Desconocido</div>
+                    <button class="btn btn-on" onclick="controlRele(4, true)">ON</button>
+                    <button class="btn btn-off" onclick="controlRele(4, false)">OFF</button>
                 </div>
             </div>
+        </div>
+
+        <!-- ===== INFORMACIÓN DE SENSORES ===== -->
+        <div class="section">
+            <h3>📊 Estado del Sistema</h3>
+            <div class="relay-grid">
+                <div class="info-card">
+                    <h4>🌡️ Temperatura</h4>
+                    <div class="info-value" id="temperature">--</div>
+                    <div class="info-unit">°C</div>
+                </div>
+                
+                <div class="info-card">
+                    <h4>💧 Humedad</h4>
+                    <div class="info-value" id="humidity">--</div>
+                    <div class="info-unit">%</div>
+                </div>
+                
+                <div class="info-card">
+                    <h4>🔌 Estado Sistema</h4>
+                    <div class="info-value" id="system-status">Online</div>
+                    <div class="info-unit">Conectado</div>
+                </div>
+                
+                <div class="info-card">
+                    <h4>⏰ Última Lectura</h4>
+                    <div class="info-value" id="last-reading">--:--</div>
+                    <div class="info-unit">Hoy</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== GRÁFICOS ===== -->
+        <div class="section">
+            <h3>📈 Historial de Sensores</h3>
+            <div class="chart-container">
+                <canvas id="sensorChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- ===== ACCIONES RÁPIDAS ===== -->
+        <div class="section">
+            <h3>⚡ Acciones Rápidas</h3>
+            <div class="info-card">
+                <div class="info-links">
+                    <a href="/scheduler" class="btn btn-secondary">📅 Programar Riego</a>
+                    <a href="/logs" class="btn btn-secondary">📋 Ver Logs</a>
+                    <button class="btn btn-on" onclick="emergencyStop()">🛑 Parada de Emergencia</button>
+                    <button class="btn btn-secondary" onclick="refreshData()">🔄 Actualizar Datos</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <div class="footer">
+            <p>Sistema AutoHidro - Control de Hidroponia Automatizado</p>
+            <p>Desarrollado con Node.js y Raspberry Pi</p>
         </div>
     </div>
-
-    <div class="container-fluid page-content">
-        <!-- Estado del Sistema -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="main-card green-theme">
-                    <div class="card-header">
-                        <h5><i class="bi bi-info-circle"></i> Estado del Sistema</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3 mb-3">
-                                <div class="status-card text-center green-accent">
-                                    <div class="card-body">
-                                        <div class="status-icon text-success">
-                                            <i class="bi bi-thermometer-half"></i>
-                                        </div>
-                                        <div class="status-value" id="current-temp">--°C</div>
-                                        <div class="status-label">Temperatura</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="status-card text-center green-accent">
-                                    <div class="card-body">
-                                        <div class="status-icon text-info">
-                                            <i class="bi bi-droplet"></i>
-                                        </div>
-                                        <div class="status-value" id="current-humidity">--%</div>
-                                        <div class="status-label">Humedad</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="status-card text-center green-accent">
-                                    <div class="card-body">
-                                        <div class="status-icon text-warning">
-                                            <i class="bi bi-clock"></i>
-                                        </div>
-                                        <div class="status-value" id="system-uptime">--</div>
-                                        <div class="status-label">Tiempo Activo</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <div class="status-card text-center green-accent">
-                                    <div class="card-body">
-                                        <div class="status-icon text-primary">
-                                            <i class="bi bi-activity"></i>
-                                        </div>
-                                        <div class="status-value" id="active-schedules">--</div>
-                                        <div class="status-label">Horarios Activos</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Control de Relés -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="main-card green-theme">
-                    <div class="card-header">
-                        <h5><i class="bi bi-toggle-on"></i> Control de Relés</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3 mb-4">
-                                <div class="status-card text-center green-accent">
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <i class="bi bi-lightbulb text-warning" style="font-size: 2rem;"></i>
-                                        </div>
-                                        <h6 class="fw-bold">Relé 1 - Iluminación</h6>
-                                        <div class="form-check form-switch d-flex justify-content-center">
-                                            <input class="form-check-input" type="checkbox" id="rele1" style="width: 3rem; height: 1.5rem;">
-                                        </div>
-                                        <small class="text-muted">Control de luces LED</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-4">
-                                <div class="status-card text-center green-accent">
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <i class="bi bi-droplet-fill text-primary" style="font-size: 2rem;"></i>
-                                        </div>
-                                        <h6 class="fw-bold">Relé 2 - Bomba de Agua</h6>
-                                        <div class="form-check form-switch d-flex justify-content-center">
-                                            <input class="form-check-input" type="checkbox" id="rele2" style="width: 3rem; height: 1.5rem;">
-                                        </div>
-                                        <small class="text-muted">Sistema de riego</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-4">
-                                <div class="status-card text-center green-accent">
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <i class="bi bi-wind text-success" style="font-size: 2rem;"></i>
-                                        </div>
-                                        <h6 class="fw-bold">Relé 3 - Ventilación</h6>
-                                        <div class="form-check form-switch d-flex justify-content-center">
-                                            <input class="form-check-input" type="checkbox" id="rele3" style="width: 3rem; height: 1.5rem;">
-                                        </div>
-                                        <small class="text-muted">Control de aire</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 mb-4">
-                                <div class="status-card text-center green-accent">
-                                    <div class="card-body">
-                                        <div class="mb-3">
-                                            <i class="bi bi-thermometer-half text-danger" style="font-size: 2rem;"></i>
-                                        </div>
-                                        <h6 class="fw-bold">Relé 4 - Calefacción</h6>
-                                        <div class="form-check form-switch d-flex justify-content-center">
-                                            <input class="form-check-input" type="checkbox" id="rele4" style="width: 3rem; height: 1.5rem;">
-                                        </div>
-                                        <small class="text-muted">Control térmico</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Gráficos y Monitoreo -->
-        <div class="row mb-4">
-            <div class="col-lg-8 mb-4">
-                <div class="main-card green-theme">
-                    <div class="card-header">
-                        <h5><i class="bi bi-graph-up"></i> Histórico de Sensores</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-container">
-                            <canvas id="sensorChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 mb-4">
-                <div class="main-card green-theme">
-                    <div class="card-header">
-                        <h5><i class="bi bi-list-check"></i> Actividades Recientes</h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="recent-activities">
-                            <div class="text-center text-muted">
-                                <i class="bi bi-clock-history" style="font-size: 2rem;"></i>
-                                <p class="mt-2">Cargando actividades...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Acciones Rápidas -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="main-card green-theme">
-                    <div class="card-header">
-                        <h5><i class="bi bi-lightning"></i> Acciones Rápidas</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3 mb-3">
-                                <button class="btn btn-hidro w-100" onclick="activateAllRele()">
-                                    <i class="bi bi-play-circle"></i> Activar Todo
-                                </button>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <button class="btn btn-hidro-outline w-100" onclick="deactivateAllRele()">
-                                    <i class="bi bi-stop-circle"></i> Desactivar Todo
-                                </button>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <button class="btn btn-hidro-outline w-100" onclick="createBackup()">
-                                    <i class="bi bi-download"></i> Crear Respaldo
-                                </button>
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <button class="btn btn-hidro-outline w-100" onclick="restartSystem()">
-                                    <i class="bi bi-arrow-clockwise"></i> Reiniciar Sistema
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5><i class="bi bi-droplet-fill"></i> Sistema de Hidroponía</h5>
-                    <p>Control automatizado para cultivos hidropónicos profesionales</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <h5>Desarrollado por</h5>
-                    <p><strong>Ing. Daril Díaz</strong> - 2024</p>
-                    <p><small>Versión 1.0 - Modo Desarrollo</small></p>
-                </div>
-            </div>
-        </div>
-    </footer>
 
     <!-- Bootstrap 5 JS -->
     <script src="http://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -390,402 +175,302 @@
     <script src="/js/main.js"></script>
     
     <script>
-        // Inicializar Socket.IO con manejo de errores
-        function initializeSocket() {
-            try {
-                // Verificar si Socket.IO está disponible
-                if (typeof io !== 'undefined') {
-                    socket = io({
-                        transports: ['websocket', 'polling'],
-                        timeout: 20000,
-                        forceNew: true
-                    });
-                    
-                    socket.on('connect', function() {
-                        console.log('Socket.IO conectado');
-                        showNotification('Conectado al servidor', 'success');
-                    });
-                    
-                    socket.on('disconnect', function() {
-                        console.log('Socket.IO desconectado');
-                        showNotification('Desconectado del servidor', 'warning');
-                    });
-                    
-                    socket.on('connect_error', function(error) {
-                        console.error('Error de conexión Socket.IO:', error);
-                        showNotification('Error de conexión', 'danger');
-                    });
-                    
-                    socket.on('sensor_data', function(data) {
-                        updateSensorData(data);
-                    });
-                    
-                    socket.on('rele_status', function(data) {
-                        updateReleStatus(data);
-                    });
-                    
-                    return socket;
-                } else {
-                    console.warn('Socket.IO no disponible');
-                    showNotification('Socket.IO no disponible - Modo offline', 'warning');
-                    return null;
-                }
-            } catch (error) {
-                console.error('Error inicializando Socket.IO:', error);
-                showNotification('Error inicializando conexión', 'danger');
-                return null;
-            }
+    // ===== VARIABLES GLOBALES =====
+    let socket = null;
+    let sensorChart = null;
+    let lastData = {
+        temperature: 0,
+        humidity: 0,
+        timestamp: new Date()
+    };
+
+    // ===== INICIALIZACIÓN =====
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeClock();
+        initializeSocket();
+        initializeChart();
+        refreshData();
+        
+        // Actualizar datos cada 5 segundos
+        setInterval(refreshData, 5000);
+    });
+
+    // ===== RELOJ DEL SISTEMA =====
+    function initializeClock() {
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('es-ES');
+            const dateString = now.toLocaleDateString('es-ES');
+            
+            document.getElementById('clock-time').textContent = timeString;
+            document.getElementById('clock-date').textContent = dateString;
         }
+        
+        updateClock();
+        setInterval(updateClock, 1000);
+    }
 
-        // Variables globales
-        let sensorChart;
-        let sensorData = {
-            labels: [],
-            temperature: [],
-            humidity: []
-        };
+    // ===== SOCKET.IO =====
+    function initializeSocket() {
+        try {
+            if (typeof io !== 'undefined') {
+                socket = io({
+                    transports: ['websocket', 'polling'],
+                    timeout: 20000,
+                    forceNew: true
+                });
 
-        // Inicializar gráfico
-        function initChart() {
-            const ctx = document.getElementById('sensorChart').getContext('2d');
-            sensorChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: sensorData.labels,
-                    datasets: [{
-                        label: 'Temperatura (°C)',
-                        data: sensorData.temperature,
-                        borderColor: '#28a745',
-                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
-                        tension: 0.4,
-                        yAxisID: 'y'
-                    }, {
-                        label: 'Humedad (%)',
-                        data: sensorData.humidity,
-                        borderColor: '#0dcaf0',
-                        backgroundColor: 'rgba(13, 202, 240, 0.1)',
-                        tension: 0.4,
-                        yAxisID: 'y1'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    scales: {
-                        x: {
-                            display: true,
-                            title: {
-                                display: true,
-                                text: 'Tiempo'
-                            }
-                        },
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            title: {
-                                display: true,
-                                text: 'Temperatura (°C)'
-                            }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            title: {
-                                display: true,
-                                text: 'Humedad (%)'
-                            },
-                            grid: {
-                                drawOnChartArea: false,
-                            },
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    }
-                }
-            });
-        }
+                socket.on('connect', function() {
+                    console.log('Conectado al servidor');
+                    document.getElementById('system-status').textContent = 'Online';
+                    document.getElementById('system-status').className = 'info-value text-green';
+                });
 
-        // Actualizar datos de sensores
-        function updateSensorData(data) {
-            if (data && data.temperature !== undefined && data.humidity !== undefined) {
-                const now = new Date().toLocaleTimeString();
-                
-                // Agregar nuevos datos
-                sensorData.labels.push(now);
-                sensorData.temperature.push(data.temperature);
-                sensorData.humidity.push(data.humidity);
-                
-                // Mantener solo los últimos 20 puntos
-                if (sensorData.labels.length > 20) {
-                    sensorData.labels.shift();
-                    sensorData.temperature.shift();
-                    sensorData.humidity.shift();
-                }
-                
-                // Actualizar gráfico
-                if (sensorChart) {
-                    sensorChart.update();
-                }
-                
-                // Actualizar valores actuales
-                document.getElementById('current-temp').textContent = `${data.temperature}°C`;
-                document.getElementById('current-humidity').textContent = `${data.humidity}%`;
-            }
-        }
+                socket.on('disconnect', function() {
+                    console.log('Desconectado del servidor');
+                    document.getElementById('system-status').textContent = 'Offline';
+                    document.getElementById('system-status').className = 'info-value text-dark-green';
+                });
 
-        // Actualizar estados de relés
-        function updateReleStates(states) {
-            states.forEach((state, index) => {
-                const releId = index + 1;
-                const checkbox = document.getElementById(`rele${releId}`);
-                if (checkbox) {
-                    checkbox.checked = state.active;
-                }
-            });
-        }
+                socket.on('connect_error', function(error) {
+                    console.error('Error de conexión:', error);
+                    showNotification('Error de conexión con el servidor', 'error');
+                });
 
-        // Control de relés
-        function controlRele(releId, state) {
-            if (socket) {
-                socket.emit('control_rele', { releId, state, reason: 'Control manual' });
+                socket.on('sensor_data', function(data) {
+                    updateSensorData(data);
+                });
+
+                socket.on('rele_status', function(data) {
+                    updateReleStatus(data);
+                });
+
             } else {
-                // Fallback si no hay Socket.IO
-                showNotification(`Relé ${releId} ${state ? 'activado' : 'desactivado'}`, 'info');
+                console.warn('Socket.IO no disponible');
+                showNotification('Socket.IO no disponible - Modo offline', 'warning');
+            }
+        } catch (error) {
+            console.error('Error inicializando Socket.IO:', error);
+            showNotification('Error inicializando conexión', 'danger');
+        }
+    }
+
+    // ===== ACTUALIZAR DATOS DE SENSORES =====
+    function updateSensorData(data) {
+        if (data.temperature !== undefined) {
+            document.getElementById('temperature').textContent = data.temperature.toFixed(1);
+            lastData.temperature = data.temperature;
+        }
+        
+        if (data.humidity !== undefined) {
+            document.getElementById('humidity').textContent = data.humidity.toFixed(1);
+            lastData.humidity = data.humidity;
+        }
+        
+        if (data.timestamp) {
+            const time = new Date(data.timestamp);
+            document.getElementById('last-reading').textContent = time.toLocaleTimeString('es-ES', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            lastData.timestamp = time;
+        }
+        
+        updateChart();
+    }
+
+    // ===== ACTUALIZAR ESTADO DE RELÉS =====
+    function updateReleStatus(data) {
+        for (let i = 1; i <= 4; i++) {
+            const statusElement = document.getElementById(`rele${i}-status`);
+            if (statusElement && data[`rele${i}`] !== undefined) {
+                const isOn = data[`rele${i}`];
+                statusElement.textContent = isOn ? 'Encendido' : 'Apagado';
+                statusElement.className = `relay-status ${isOn ? 'on' : 'off'}`;
             }
         }
+    }
 
-        // Event listeners para relés
-        document.getElementById('rele1').addEventListener('change', (e) => {
-            controlRele(1, e.target.checked);
-        });
+    // ===== CONTROL DE RELÉS =====
+    function controlRele(releId, state) {
+        const action = state ? 'encender' : 'apagar';
         
-        document.getElementById('rele2').addEventListener('change', (e) => {
-            controlRele(2, e.target.checked);
-        });
-        
-        document.getElementById('rele3').addEventListener('change', (e) => {
-            controlRele(3, e.target.checked);
-        });
-        
-        document.getElementById('rele4').addEventListener('change', (e) => {
-            controlRele(4, e.target.checked);
-        });
-
-        // Acciones rápidas
-        function activateAllRele() {
-            for (let i = 1; i <= 4; i++) {
-                controlRele(i, true);
-            }
-            showNotification('Todos los relés activados', 'success');
-        }
-
-        function deactivateAllRele() {
-            for (let i = 1; i <= 4; i++) {
-                controlRele(i, false);
-            }
-            showNotification('Todos los relés desactivados', 'info');
-        }
-
-        function createBackup() {
-            fetch('/api/system/control', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'backup' })
+        if (socket && socket.connected) {
+            socket.emit('control_rele', { rele: releId, state: state });
+            showNotification(`Comando enviado: ${action} válvula ${releId}`, 'info');
+        } else {
+            // Fallback: llamada HTTP directa
+            fetch(`/api/rele/${releId}/${state ? 'on' : 'off'}`, {
+                method: 'POST'
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showNotification('Respaldo creado correctamente', 'success');
+                    showNotification(`Válvula ${releId} ${action} correctamente`, 'success');
+                    updateReleStatus({ [`rele${releId}`]: state });
                 } else {
-                    showNotification(`Error: ${data.error}`, 'danger');
+                    showNotification(`Error al ${action} válvula ${releId}`, 'error');
                 }
             })
             .catch(error => {
-                showNotification(`Error: ${error.message}`, 'danger');
+                console.error('Error:', error);
+                showNotification(`Error de comunicación`, 'error');
             });
         }
+    }
 
-        function restartSystem() {
-            if (confirm('¿Estás seguro de que quieres reiniciar el sistema?')) {
-                fetch('/api/system/control', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'restart' })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showNotification('Sistema reiniciándose...', 'warning');
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 2000);
-                    } else {
-                        showNotification(`Error: ${data.error}`, 'danger');
-                    }
-                })
-                .catch(error => {
-                    showNotification(`Error: ${error.message}`, 'danger');
-                });
-            }
-        }
-
-        // Función de cerrar sesión
-        function logout() {
-            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                showNotification('Cerrando sesión...', 'warning');
-                setTimeout(() => {
-                    // Aquí puedes agregar lógica de limpieza de sesión
-                    window.location.reload();
-                }, 1500);
-            }
-        }
-
-        // Sistema de notificaciones
-        function showNotification(message, type = 'info') {
-            const toastContainer = document.getElementById('toast-container') || createToastContainer();
-            
-            const toast = document.createElement('div');
-            toast.className = `toast show bg-${type} text-white`;
-            toast.innerHTML = `
-                <div class="toast-body">
-                    <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-triangle' : 'info-circle'}"></i>
-                    ${message}
-                </div>
-            `;
-            
-            toastContainer.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
-
-        function createToastContainer() {
-            const container = document.createElement('div');
-            container.id = 'toast-container';
-            container.className = 'toast-container position-fixed top-0 end-0 p-3';
-            container.style.zIndex = '9999';
-            document.body.appendChild(container);
-            return container;
-        }
-
-        // Inicializar reloj del sistema
-        function updateSystemClock() {
-            const now = new Date();
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const seconds = now.getSeconds().toString().padStart(2, '0');
-            const timeString = `${hours}:${minutes}:${seconds}`;
-            
-            const day = now.getDate().toString().padStart(2, '0');
-            const month = (now.getMonth() + 1).toString().padStart(2, '0');
-            const year = now.getFullYear();
-            const dateString = `${day}/${month}/${year}`;
-            
-            // Actualizar elementos del DOM
-            const clockElement = document.getElementById('system-clock');
-            const dateElement = document.getElementById('system-date');
-            
-            if (clockElement) clockElement.textContent = timeString;
-            if (dateElement) dateElement.textContent = dateString;
-        }
-
-        // Inicializar cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', function() {
-            // Forzar HTTP y prevenir HTTPS
-            forceHttpProtocol();
-            
-            // Inicializar Socket.IO
-            let socket = initializeSocket();
-            
-            // Inicializar tooltips de Bootstrap
-            initTooltips();
-            
-            initChart();
-            initSystemClock();
-            
-            // Simular datos iniciales si no hay Socket.IO
-            if (!socket) {
-                const mockData = {
-                    temperature: 22 + Math.random() * 8,
-                    humidity: 50 + Math.random() * 30
-                };
-                updateSensorData(mockData);
-            }
-            
-            // Actualizar tiempo del sistema
-            setInterval(updateSystemClock, 1000);
-        });
-
-        // Inicializar tooltips
-        function initTooltips() {
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl, {
-                    trigger: 'hover',
-                    placement: 'bottom',
-                    animation: true
-                });
-            });
-        }
-
-        // Forzar protocolo HTTP y prevenir HTTPS
-        function forceHttpProtocol() {
-            // Redirigir si estamos en HTTPS
-            if (window.location.protocol === 'https:') {
-                const newUrl = window.location.href.replace('https:', 'http:');
-                window.location.replace(newUrl);
-                return;
-            }
-            
-            // Prevenir enlaces HTTPS
-            document.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A' && e.target.href && e.target.href.startsWith('https:')) {
-                    e.preventDefault();
-                    const newHref = e.target.href.replace('https:', 'http:');
-                    window.location.href = newHref;
-                }
-            });
-            
-            // Prevenir formularios HTTPS
-            document.addEventListener('submit', function(e) {
-                if (e.target.action && e.target.action.startsWith('https:')) {
-                    e.preventDefault();
-                    e.target.action = e.target.action.replace('https:', 'http:');
-                    e.target.submit();
-                }
-            });
-            
-            // Prevenir redirecciones HTTPS
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
-                        const element = mutation.target;
-                        if (element.href && element.href.startsWith('https:')) {
-                            element.href = element.href.replace('https:', 'http:');
+    // ===== GRÁFICO DE SENSORES =====
+    function initializeChart() {
+        const ctx = document.getElementById('sensorChart').getContext('2d');
+        
+        sensorChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Temperatura (°C)',
+                    data: [],
+                    borderColor: '#4CAF50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    tension: 0.4
+                }, {
+                    label: 'Humedad (%)',
+                    data: [],
+                    borderColor: '#2196F3',
+                    backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#2E7D32',
+                            font: {
+                                weight: 'bold'
+                            }
                         }
                     }
-                });
-            });
-            
-            // Observar cambios en enlaces
-            document.querySelectorAll('a[href]').forEach(function(link) {
-                observer.observe(link, { attributes: true, attributeFilter: ['href'] });
-            });
-        }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#666'
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#666'
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    }
+                }
+            }
+        });
+    }
 
-        // Inicializar reloj del sistema
-        function initSystemClock() {
-            updateSystemClock();
-            // Actualizar cada segundo
-            setInterval(updateSystemClock, 1000);
+    function updateChart() {
+        if (!sensorChart) return;
+        
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('es-ES', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        // Agregar nuevos datos
+        sensorChart.data.labels.push(timeString);
+        sensorChart.data.datasets[0].data.push(lastData.temperature);
+        sensorChart.data.datasets[1].data.push(lastData.humidity);
+        
+        // Mantener solo los últimos 20 puntos
+        if (sensorChart.data.labels.length > 20) {
+            sensorChart.data.labels.shift();
+            sensorChart.data.datasets[0].data.shift();
+            sensorChart.data.datasets[1].data.shift();
         }
+        
+        sensorChart.update('none');
+    }
+
+    // ===== FUNCIONES UTILITARIAS =====
+    function refreshData() {
+        fetch('/api/sensors/current')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateSensorData(data.data);
+                }
+            })
+            .catch(error => {
+                console.error('Error actualizando datos:', error);
+            });
+    }
+
+    function emergencyStop() {
+        if (confirm('¿Estás seguro de que quieres activar la parada de emergencia? Esto apagará todas las válvulas.')) {
+            for (let i = 1; i <= 4; i++) {
+                controlRele(i, false);
+            }
+            showNotification('Parada de emergencia activada', 'warning');
+        }
+    }
+
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    }
+
+    function logout() {
+        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+            showNotification('Cerrando sesión...', 'warning');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        }
+    }
+
+    // ===== FORZAR PROTOCOLO HTTP =====
+    function forceHttpProtocol() {
+        if (window.location.protocol === 'https:') {
+            window.location.href = window.location.href.replace('https:', 'http:');
+        }
+    }
+
+    // Ejecutar al cargar
+    forceHttpProtocol();
+
+    // Prevenir enlaces HTTPS
+    document.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' && e.target.href && e.target.href.startsWith('https:')) {
+            e.preventDefault();
+            e.target.href = e.target.href.replace('https:', 'http:');
+            e.target.click();
+        }
+    });
+
+    // Prevenir formularios HTTPS
+    document.addEventListener('submit', function(e) {
+        if (e.target.action && e.target.action.startsWith('https:')) {
+            e.preventDefault();
+            e.target.action = e.target.action.replace('https:', 'http:');
+            e.target.submit();
+        }
+    });
+    </script>
+</body>
+</html>

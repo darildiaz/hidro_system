@@ -4,359 +4,141 @@
  * Ing. Daril Díaz - 2024
  */
 
-// Variables globales
-let systemStatus = {
-    online: true,
-    lastUpdate: new Date(),
-    uptime: 0
-};
+// ===== FUNCIONES UTILITARIAS DEL SISTEMA AUTO HIDRO =====
 
-// Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    initializeCommonFunctions();
-    setupGlobalEventListeners();
-    startStatusUpdates();
-});
+// ===== FORZAR PROTOCOLO HTTP =====
+function forceHttpProtocol() {
+    if (window.location.protocol === 'https:') {
+        window.location.href = window.location.href.replace('https:', 'http:');
+    }
+}
 
-/**
- * Inicializar funciones comunes
- */
-function initializeCommonFunctions() {
-    // Configurar tooltips de Bootstrap
+// ===== PREVENIR ENLACES HTTPS =====
+function preventHttpsLinks() {
+    // Prevenir enlaces HTTPS
+    document.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' && e.target.href && e.target.href.startsWith('https:')) {
+            e.preventDefault();
+            e.target.href = e.target.href.replace('https:', 'http:');
+            e.target.click();
+        }
+    });
+
+    // Prevenir formularios HTTPS
+    document.addEventListener('submit', function(e) {
+        if (e.target.action && e.target.action.startsWith('https:')) {
+            e.preventDefault();
+            e.target.action = e.target.action.replace('https:', 'http:');
+            e.target.submit();
+        }
+    });
+}
+
+// ===== INICIALIZAR TOOLTIPS =====
+function initTooltips() {
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-    
-    // Configurar popovers de Bootstrap
-    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-    popoverTriggerList.map(function (popoverTriggerEl) {
-        return new bootstrap.Popover(popoverTriggerEl);
-    });
-    
-    // Configurar modales
-    setupModals();
-    
-    // Configurar notificaciones
-    setupNotifications();
-}
-
-/**
- * Configurar event listeners globales
- */
-function setupGlobalEventListeners() {
-    // Event listener para confirmaciones
-    document.addEventListener('click', function(e) {
-        if (e.target.matches('[data-confirm]')) {
-            e.preventDefault();
-            const message = e.target.getAttribute('data-confirm');
-            const action = e.target.getAttribute('data-action');
-            
-            showConfirmDialog(message, () => {
-                if (action) {
-                    executeAction(action, e.target);
-                }
-            });
-        }
-    });
-    
-    // Event listener para acciones del sistema
-    document.addEventListener('click', function(e) {
-        if (e.target.matches('#systemStatus')) {
-            e.preventDefault();
-            showSystemStatus();
-        }
-        
-        if (e.target.matches('#createBackup')) {
-            e.preventDefault();
-            createBackup();
-        }
-        
-        if (e.target.matches('#restartSystem')) {
-            e.preventDefault();
-            restartSystem();
-        }
-    });
-    
-    // Event listener para teclas de acceso rápido
-    document.addEventListener('keydown', function(e) {
-        // Ctrl + R para refrescar
-        if (e.ctrlKey && e.key === 'r') {
-            e.preventDefault();
-            location.reload();
-        }
-        
-        // Ctrl + B para crear backup
-        if (e.ctrlKey && e.key === 'b') {
-            e.preventDefault();
-            createBackup();
-        }
-        
-        // Ctrl + S para mostrar estado del sistema
-        if (e.ctrlKey && e.key === 's') {
-            e.preventDefault();
-            showSystemStatus();
-        }
-    });
-}
-
-/**
- * Configurar modales
- */
-function setupModals() {
-    // Modal de confirmación
-    const confirmModal = document.getElementById('confirmModal');
-    if (confirmModal) {
-        const confirmAction = document.getElementById('confirmAction');
-        confirmAction.addEventListener('click', function() {
-            if (window.pendingAction) {
-                window.pendingAction();
-                window.pendingAction = null;
-            }
-            bootstrap.Modal.getInstance(confirmModal).hide();
+        return new bootstrap.Tooltip(tooltipTriggerEl, {
+            trigger: 'hover',
+            placement: 'bottom',
+            animation: true
         });
-    }
+    });
 }
 
-/**
- * Configurar notificaciones
- */
-function setupNotifications() {
-    // Configurar toast de notificaciones
-    const toast = document.getElementById('notificationToast');
-    if (toast) {
-        // Configurar auto-hide después de 5 segundos
-        toast.addEventListener('hidden.bs.toast', function() {
-            // Limpiar contenido
-            document.getElementById('toastMessage').textContent = '';
-        });
-    }
-}
-
-/**
- * Mostrar diálogo de confirmación
- */
-function showConfirmDialog(message, callback) {
-    const modal = document.getElementById('confirmModal');
-    const confirmMessage = document.getElementById('confirmMessage');
-    
-    if (modal && confirmMessage) {
-        confirmMessage.textContent = message;
-        window.pendingAction = callback;
-        
-        const bsModal = new bootstrap.Modal(modal);
-        bsModal.show();
-    } else {
-        // Fallback si no hay modal
-        if (confirm(message)) {
-            callback();
-        }
-    }
-}
-
-/**
- * Mostrar notificación
- */
-function showNotification(message, type = 'info', duration = 5000) {
-    const toast = document.getElementById('notificationToast');
-    const toastMessage = document.getElementById('toastMessage');
-    
-    if (toast && toastMessage) {
-        toastMessage.textContent = message;
-        
-        // Cambiar clase del toast según el tipo
-        toast.className = `toast toast-${type}`;
-        
-        const bsToast = new bootstrap.Toast(toast);
-        bsToast.show();
-        
-        // Auto-hide después del tiempo especificado
+// ===== FUNCIÓN DE CERRAR SESIÓN =====
+function logout() {
+    if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+        showNotification('Cerrando sesión...', 'warning');
         setTimeout(() => {
-            bsToast.hide();
-        }, duration);
-    } else {
-        // Fallback si no hay toast
-        console.log(`${type.toUpperCase()}: ${message}`);
-        alert(`${type.toUpperCase()}: ${message}`);
+            // Aquí puedes agregar lógica de limpieza de sesión
+            window.location.reload();
+        }, 1500);
     }
 }
 
-/**
- * Mostrar estado del sistema
- */
-async function showSystemStatus() {
+// ===== SISTEMA DE NOTIFICACIONES =====
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+
+// ===== FUNCIONES DE UTILIDAD =====
+function formatTime(date) {
+    return date.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+}
+
+function formatDate(date) {
+    return date.toLocaleDateString('es-ES');
+}
+
+function formatDateTime(date) {
+    return `${formatDate(date)} ${formatTime(date)}`;
+}
+
+// ===== VALIDACIONES =====
+function validateTime(timeString) {
+    const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+    return timeRegex.test(timeString);
+}
+
+function validateDuration(duration) {
+    return duration >= 1 && duration <= 1440;
+}
+
+function validateThreshold(value) {
+    return !isNaN(value) && value > 0;
+}
+
+// ===== FUNCIONES DE API =====
+async function apiCall(endpoint, method = 'GET', data = null) {
     try {
-        const response = await fetch('/api/system/status');
-        const data = await response.json();
-        
-        if (data.success) {
-            const status = data.status;
-            let statusHtml = `
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6>Estado del Sistema</h6>
-                        <ul class="list-unstyled">
-                            <li><strong>GPIO:</strong> ${status.gpio.gpioInitialized ? '✅ Inicializado' : '❌ Error'}</li>
-                            <li><strong>Programador:</strong> ${status.scheduler.isRunning ? '✅ Activo' : '❌ Inactivo'}</li>
-                            <li><strong>Uptime:</strong> ${formatUptime(status.uptime)}</li>
-                            <li><strong>Memoria:</strong> ${formatBytes(status.memory.heapUsed)} / ${formatBytes(status.memory.heapTotal)}</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6">
-                        <h6>Configuración GPIO</h6>
-                        <ul class="list-unstyled">
-                            <li><strong>Relés activos:</strong> ${status.gpio.releCount}</li>
-                            <li><strong>Pines:</strong> ${status.gpio.relePins.join(', ')}</li>
-                            <li><strong>DHT11:</strong> GPIO ${status.gpio.dht11Pin}</li>
-                            <li><strong>Activo en bajo:</strong> ${status.gpio.activeLow ? 'Sí' : 'No'}</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <h6>Programador</h6>
-                        <ul class="list-unstyled">
-                            <li><strong>Horarios activos:</strong> ${status.scheduler.activeSchedules}</li>
-                            <li><strong>Condiciones activas:</strong> ${status.scheduler.activeConditions}</li>
-                            <li><strong>Tareas programadas:</strong> ${status.scheduler.scheduledTasks}</li>
-                            <li><strong>Próximo respaldo:</strong> ${status.scheduler.nextBackup}</li>
-                        </ul>
-                    </div>
-                </div>
-            `;
-            
-            showModal('Estado del Sistema', statusHtml, 'info');
-        } else {
-            showNotification('Error obteniendo estado del sistema', 'error');
-        }
-    } catch (error) {
-        console.error('Error obteniendo estado del sistema:', error);
-        showNotification('Error de conexión', 'error');
-    }
-}
-
-/**
- * Crear respaldo del sistema
- */
-async function createBackup() {
-    try {
-        showNotification('Creando respaldo...', 'info');
-        
-        const response = await fetch('/api/backup', {
-            method: 'POST'
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            showNotification(`Respaldo creado: ${data.backupPath}`, 'success');
-        } else {
-            showNotification('Error creando respaldo', 'error');
-        }
-    } catch (error) {
-        console.error('Error creando respaldo:', error);
-        showNotification('Error de conexión', 'error');
-    }
-}
-
-/**
- * Reiniciar sistema
- */
-async function restartSystem() {
-    showConfirmDialog('¿Está seguro de que desea reiniciar el sistema? Esta acción puede tomar varios segundos.', async () => {
-        try {
-            showNotification('Reiniciando sistema...', 'warning');
-            
-            const response = await fetch('/api/system/control', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    action: 'restart_scheduler'
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                showNotification('Sistema reiniciado correctamente', 'success');
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
-            } else {
-                showNotification('Error reiniciando sistema', 'error');
+        const options = {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
             }
-        } catch (error) {
-            console.error('Error reiniciando sistema:', error);
-            showNotification('Error de conexión', 'error');
+        };
+
+        if (data && (method === 'POST' || method === 'PUT')) {
+            options.body = JSON.stringify(data);
         }
-    });
-}
 
-/**
- * Mostrar modal personalizado
- */
-function showModal(title, content, type = 'info') {
-    // Crear modal dinámicamente
-    const modalHtml = `
-        <div class="modal fade" id="customModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header bg-${type} text-white">
-                        <h5 class="modal-title">${title}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        ${content}
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    // Remover modal existente si hay uno
-    const existingModal = document.getElementById('customModal');
-    if (existingModal) {
-        existingModal.remove();
-    }
-    
-    // Agregar nuevo modal al DOM
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    
-    // Mostrar modal
-    const modal = new bootstrap.Modal(document.getElementById('customModal'));
-    modal.show();
-    
-    // Limpiar modal cuando se cierre
-    document.getElementById('customModal').addEventListener('hidden.bs.modal', function() {
-        this.remove();
-    });
-}
-
-/**
- * Formatear uptime
- */
-function formatUptime(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-    
-    if (hours > 0) {
-        return `${hours}h ${minutes}m ${secs}s`;
-    } else if (minutes > 0) {
-        return `${minutes}m ${secs}s`;
-    } else {
-        return `${secs}s`;
+        const response = await fetch(endpoint, options);
+        return await response.json();
+    } catch (error) {
+        console.error('Error en API call:', error);
+        throw error;
     }
 }
 
-/**
- * Formatear bytes
- */
+// ===== MANEJO DE ERRORES =====
+function handleError(error, context = '') {
+    console.error(`Error en ${context}:`, error);
+    
+    let message = 'Ha ocurrido un error inesperado';
+    
+    if (error.message) {
+        message = error.message;
+    } else if (error.error) {
+        message = error.error;
+    }
+    
+    showNotification(message, 'error');
+}
+
+// ===== FUNCIONES DE FORMATO =====
 function formatBytes(bytes, decimals = 2) {
     if (bytes === 0) return '0 Bytes';
     
@@ -369,52 +151,32 @@ function formatBytes(bytes, decimals = 2) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-/**
- * Formatear fecha
- */
-function formatDate(date) {
-    if (typeof date === 'string') {
-        date = new Date(date);
-    }
-    
-    return date.toLocaleDateString('es-ES', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+function formatPercentage(value, total) {
+    if (total === 0) return '0%';
+    return Math.round((value / total) * 100) + '%';
 }
 
-/**
- * Formatear tiempo relativo
- */
-function formatRelativeTime(date) {
-    if (typeof date === 'string') {
-        date = new Date(date);
-    }
-    
-    const now = new Date();
-    const diff = now - date;
-    const seconds = Math.floor(diff / 1000);
-    const minutes = Math.floor(seconds / 60);
+// ===== FUNCIONES DE FECHA Y HORA =====
+function getCurrentTime() {
+    return new Date();
+}
+
+function getTimeDifference(start, end) {
+    const diff = end - start;
+    const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
     
     if (days > 0) {
-        return `hace ${days} día${days > 1 ? 's' : ''}`;
+        return `${days} día(s), ${hours % 24} hora(s)`;
     } else if (hours > 0) {
-        return `hace ${hours} hora${hours > 1 ? 's' : ''}`;
-    } else if (minutes > 0) {
-        return `hace ${minutes} minuto${minutes > 1 ? 's' : ''}`;
+        return `${hours} hora(s), ${minutes % 60} minuto(s)`;
     } else {
-        return 'ahora mismo';
+        return `${minutes} minuto(s)`;
     }
 }
 
-/**
- * Validar formulario
- */
+// ===== FUNCIONES DE VALIDACIÓN DE FORMULARIOS =====
 function validateForm(formElement) {
     const inputs = formElement.querySelectorAll('input[required], select[required], textarea[required]');
     let isValid = true;
@@ -431,138 +193,143 @@ function validateForm(formElement) {
     return isValid;
 }
 
-/**
- * Limpiar formulario
- */
-function clearForm(formElement) {
-    const inputs = formElement.querySelectorAll('input, select, textarea');
+function clearFormValidation(formElement) {
+    const inputs = formElement.querySelectorAll('.is-invalid');
     inputs.forEach(input => {
-        input.value = '';
-        input.classList.remove('is-invalid', 'is-valid');
+        input.classList.remove('is-invalid');
     });
 }
 
-/**
- * Ejecutar acción
- */
-function executeAction(action, element) {
-    switch (action) {
-        case 'delete':
-            if (element.dataset.id) {
-                deleteItem(element.dataset.id);
-            }
-            break;
-        case 'edit':
-            if (element.dataset.id) {
-                editItem(element.dataset.id);
-            }
-            break;
-        case 'toggle':
-            if (element.dataset.id) {
-                toggleItem(element.dataset.id);
-            }
-            break;
-        default:
-            console.log('Acción no reconocida:', action);
-    }
-}
-
-/**
- * Iniciar actualizaciones de estado
- */
-function startStatusUpdates() {
-    // Actualizar estado del sistema cada 30 segundos
-    setInterval(async () => {
-        try {
-            const response = await fetch('/api/system/status');
-            const data = await response.json();
-            
-            if (data.success) {
-                systemStatus.uptime = data.status.uptime;
-                systemStatus.lastUpdate = new Date();
-                
-                // Actualizar indicador de estado en navbar
-                updateNavbarStatus(data.status);
-            }
-        } catch (error) {
-            console.error('Error actualizando estado:', error);
-            systemStatus.online = false;
-        }
-    }, 30000);
-}
-
-/**
- * Actualizar estado en navbar
- */
-function updateNavbarStatus(status) {
-    const statusIndicator = document.querySelector('.navbar-nav .dropdown-toggle');
+// ===== FUNCIONES DE ANIMACIÓN =====
+function fadeIn(element, duration = 300) {
+    element.style.opacity = '0';
+    element.style.display = 'block';
     
-    if (statusIndicator) {
-        const isOnline = status.gpio.gpioInitialized && status.scheduler.isRunning;
+    let start = null;
+    function animate(timestamp) {
+        if (!start) start = timestamp;
+        const progress = timestamp - start;
+        const opacity = Math.min(progress / duration, 1);
         
-        if (isOnline) {
-            statusIndicator.innerHTML = '<i class="bi bi-circle-fill text-success me-1"></i>Sistema Online';
-            systemStatus.online = true;
+        element.style.opacity = opacity;
+        
+        if (progress < duration) {
+            requestAnimationFrame(animate);
+        }
+    }
+    
+    requestAnimationFrame(animate);
+}
+
+function fadeOut(element, duration = 300) {
+    let start = null;
+    function animate(timestamp) {
+        if (!start) start = timestamp;
+        const progress = timestamp - start;
+        const opacity = Math.max(1 - (progress / duration), 0);
+        
+        element.style.opacity = opacity;
+        
+        if (progress < duration) {
+            requestAnimationFrame(animate);
         } else {
-            statusIndicator.innerHTML = '<i class="bi bi-circle-fill text-danger me-1"></i>Sistema Offline';
-            systemStatus.online = false;
+            element.style.display = 'none';
         }
     }
+    
+    requestAnimationFrame(animate);
 }
 
-/**
- * Función de utilidad para hacer peticiones HTTP
- */
-async function apiRequest(url, options = {}) {
+// ===== FUNCIONES DE LOCAL STORAGE =====
+function saveToLocalStorage(key, value) {
     try {
-        const response = await fetch(url, {
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers
-            },
-            ...options
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.error || 'Error en la petición');
-        }
-        
-        return data;
+        localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-        console.error('Error en petición API:', error);
-        throw error;
+        console.error('Error guardando en localStorage:', error);
     }
 }
 
-/**
- * Función para mostrar errores de API
- */
-function showApiError(error, fallbackMessage = 'Error en la operación') {
-    const message = error.message || fallbackMessage;
-    showNotification(message, 'error');
+function getFromLocalStorage(key, defaultValue = null) {
+    try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : defaultValue;
+    } catch (error) {
+        console.error('Error leyendo de localStorage:', error);
+        return defaultValue;
+    }
 }
 
-/**
- * Función para mostrar éxito de API
- */
-function showApiSuccess(message) {
-    showNotification(message, 'success');
+function removeFromLocalStorage(key) {
+    try {
+        localStorage.removeItem(key);
+    } catch (error) {
+        console.error('Error removiendo de localStorage:', error);
+    }
 }
 
-// Exportar funciones para uso global
-window.HidroSystem = {
+// ===== FUNCIONES DE COOKIES =====
+function setCookie(name, value, days = 7) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+function deleteCookie(name) {
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/`;
+}
+
+// ===== INICIALIZACIÓN CUANDO EL DOM ESTÉ LISTO =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Forzar protocolo HTTP
+    forceHttpProtocol();
+    
+    // Prevenir enlaces HTTPS
+    preventHttpsLinks();
+    
+    // Inicializar tooltips
+    initTooltips();
+    
+    console.log('Sistema AutoHidro inicializado correctamente');
+});
+
+// ===== EXPORTAR FUNCIONES PARA USO GLOBAL =====
+window.AutoHidroUtils = {
+    forceHttpProtocol,
+    preventHttpsLinks,
+    initTooltips,
+    logout,
     showNotification,
-    showConfirmDialog,
-    showModal,
+    formatTime,
     formatDate,
-    formatRelativeTime,
-    formatUptime,
+    formatDateTime,
+    validateTime,
+    validateDuration,
+    validateThreshold,
+    apiCall,
+    handleError,
     formatBytes,
+    formatPercentage,
+    getCurrentTime,
+    getTimeDifference,
     validateForm,
-    clearForm,
-    apiRequest,
-    showApiError,
-    showApiSuccess
+    clearFormValidation,
+    fadeIn,
+    fadeOut,
+    saveToLocalStorage,
+    getFromLocalStorage,
+    removeFromLocalStorage,
+    setCookie,
+    getCookie,
+    deleteCookie
 }; 
