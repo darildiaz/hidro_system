@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Minimalista de Hidroponía</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 50%, #6b8e23 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d5a27;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .status-card {
+            background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);
+            border: 2px solid #4a7c59;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-card h3 {
+            color: #2d5a27;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .temperature-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #d32f2f;
+            margin-bottom: 10px;
+        }
+        
+        .humidity-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        
+        .relay-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .relay-card {
+            background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);
+            border: 2px solid #4a7c59;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .relay-card h3 {
+            color: #2d5a27;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .relay-status {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .relay-status.on {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .relay-status.off {
+            background: #f44336;
+            color: white;
+        }
+        
+        .relay-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+        
+        .btn-on {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .btn-on:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .btn-off {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-off:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .refresh-btn {
+            background: #2196f3;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-btn:hover {
+            background: #1976d2;
+            transform: translateY(-2px);
+        }
+        
+        .timestamp {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #ffcdd2;
+        }
+        
+        .success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 1px solid #c8e6c9;
+        }
+        
+        @media (max-width: 768px) {
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .relay-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌱 Control de Hidroponía</h1>
+        
+        <!-- Botón de actualización -->
+        <div style="text-align: center;">
+            <button class="btn refresh-btn" onclick="refreshAll()">
+                🔄 Actualizar Datos
+            </button>
+        </div>
+        
+        <!-- Mensajes de estado -->
+        <div id="message"></div>
+        
+        <!-- Estado de sensores -->
+        <div class="status-grid">
+            <div class="status-card">
+                <h3>🌡️ Temperatura</h3>
+                <div class="temperature-value" id="temperature">--</div>
+                <div>°C</div>
+            </div>
+            <div class="status-card">
+                <h3>💧 Humedad</h3>
+                <div class="humidity-value" id="humidity">--</div>
+                <div>%</div>
+            </div>
+        </div>
+        
+        <!-- Control de relés -->
+        <div class="relay-grid">
+            <div class="relay-card">
+                <h3>🔌 Relé 1</h3>
+                <div class="relay-status off" id="relay1-status">Desactivado</div>
+                <div class="relay-controls">
+                    <button class="btn btn-on" onclick="controlRelay(1, 'on')" id="relay1-on">ON</button>
+                    <button class="btn btn-off" onclick="controlRelay(1, 'off')" id="relay1-off">OFF</button>
+                </div>
+            </div>
+            
+            <div class="relay-card">
+                <h3>🔌 Relé 2</h3>
+                <div class="relay-status off" id="relay2-status">Desactivado</div>
+                <div class="relay-controls">
+                    <button class="btn btn-on" onclick="controlRelay(2, 'on')" id="relay2-on">ON</button>
+                    <button class="btn btn-off" onclick="controlRelay(2, 'off')" id="relay2-off">OFF</button>
+                </div>
+            </div>
+            
+            <div class="relay-card">
+                <h3>🔌 Relé 3</h3>
+                <div class="relay-status off" id="relay3-status">Desactivado</div>
+                <div class="relay-controls">
+                    <button class="btn btn-on" onclick="controlRelay(3, 'on')" id="relay3-on">ON</button>
+                    <button class="btn btn-off" onclick="controlRelay(3, 'off')" id="relay3-off">OFF</button>
+                </div>
+            </div>
+            
+            <div class="relay-card">
+                <h3>🔌 Relé 4</h3>
+                <div class="relay-status off" id="relay4-status">Desactivado</div>
+                <div class="relay-controls">
+                    <button class="btn btn-on" onclick="controlRelay(4, 'on')" id="relay4-on">ON</button>
+                    <button class="btn btn-off" onclick="controlRelay(4, 'off')" id="relay4-off">OFF</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timestamp" id="timestamp">
+            Última actualización: --
+        </div>
+    </div>
+
+    <script>
+        // ===== FUNCIONES PRINCIPALES =====
+        
+        // Actualizar temperatura y humedad
+        async function updateTemperature() {
+            try {
+                const response = await fetch('/api/temperature');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('temperature').textContent = data.data.temperature;
+                    document.getElementById('humidity').textContent = data.data.humidity;
+                    document.getElementById('timestamp').textContent = 
+                        `Última actualización: ${new Date().toLocaleTimeString()}`;
+                }
+            } catch (error) {
+                showMessage('Error obteniendo temperatura: ' + error.message, 'error');
+            }
+        }
+        
+        // Actualizar estado de relés
+        async function updateRelays() {
+            try {
+                const response = await fetch('/api/relays');
+                const data = await response.json();
+                
+                if (data.success) {
+                    data.data.forEach(relay => {
+                        const statusElement = document.getElementById(`relay${relay.relay_id}-status`);
+                        const onBtn = document.getElementById(`relay${relay.relay_id}-on`);
+                        const offBtn = document.getElementById(`relay${relay.relay_id}-off`);
+                        
+                        if (relay.state === 1) {
+                            statusElement.textContent = 'Activado';
+                            statusElement.className = 'relay-status on';
+                            onBtn.disabled = true;
+                            offBtn.disabled = false;
+                        } else {
+                            statusElement.textContent = 'Desactivado';
+                            statusElement.className = 'relay-status off';
+                            onBtn.disabled = false;
+                            offBtn.disabled = true;
+                        }
+                    });
+                }
+            } catch (error) {
+                showMessage('Error obteniendo estado de relés: ' + error.message, 'error');
+            }
+        }
+        
+        // Controlar relé
+        async function controlRelay(relayId, action) {
+            try {
+                const response = await fetch(`/api/relay/${relayId}/${action}`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    updateRelays(); // Actualizar estado
+                } else {
+                    showMessage('Error: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error controlando relé: ' + error.message, 'error');
+            }
+        }
+        
+        // Actualizar todo
+        async function refreshAll() {
+            await Promise.all([
+                updateTemperature(),
+                updateRelays()
+            ]);
+        }
+        
+        // Mostrar mensaje
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="${type}">${text}</div>`;
+            
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+        
+        // ===== INICIALIZACIÓN =====
+        
+        // Actualizar datos al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshAll();
+            
+            // Actualizar cada 5 segundos
+            setInterval(refreshAll, 5000);
+        });
+    </script>
+</body>
+</html> 
