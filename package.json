@@ -12,8 +12,11 @@
     "test": "node test_system.js",
     "test-scheduler": "node test_scheduler.js",
     "test-web": "node test_web_interface.js",
-    "install-simple": "node install_simple.js",
-    "install-deps": "node install_dependencies.js"
+    "test-dht11": "node test_dht11.js",
+    "test-relays": "node test_relays.js",
+    "install-simple": "node install_simple_final.js",
+    "install-deps": "node install_dependencies.js",
+    "migrate-db": "node migrate_database.js"
   },
   "keywords": [
     "hidroponía",

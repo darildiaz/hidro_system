@@ -57,32 +57,29 @@ class Database {
       // Tabla de horarios programados
       `CREATE TABLE IF NOT EXISTS schedules (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        rele_id INTEGER NOT NULL,
-        day_of_week INTEGER NOT NULL,
-        start_time TIME NOT NULL,
-        end_time TIME NOT NULL,
+        releId INTEGER NOT NULL,
+        time TEXT NOT NULL,
         duration INTEGER NOT NULL,
-        is_active BOOLEAN DEFAULT 1,
+        days TEXT NOT NULL,
+        enabled INTEGER DEFAULT 1,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )`,
 
-      // Tabla de condiciones de activación
+      // Tabla de condiciones para activación automática
       `CREATE TABLE IF NOT EXISTS conditions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        rele_id INTEGER NOT NULL,
+        releId INTEGER NOT NULL,
         condition_type TEXT NOT NULL,
-        threshold_value REAL NOT NULL,
-        operator TEXT NOT NULL,
-        action TEXT NOT NULL,
-        duration INTEGER NOT NULL,
-        is_active BOOLEAN DEFAULT 1,
+        value REAL NOT NULL,
+        duration INTEGER DEFAULT 15,
+        enabled INTEGER DEFAULT 1,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )`,
 
       // Tabla de estado de relés
       `CREATE TABLE IF NOT EXISTS rele_states (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        rele_id INTEGER NOT NULL,
+        releId INTEGER NOT NULL,
         state BOOLEAN NOT NULL,
         reason TEXT,
         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -103,28 +100,6 @@ class Database {
         value TEXT NOT NULL,
         description TEXT,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )`,
-
-      // Tabla de horarios programados
-      `CREATE TABLE IF NOT EXISTS schedules (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        releId INTEGER NOT NULL,
-        time TEXT NOT NULL,
-        duration INTEGER NOT NULL,
-        days TEXT NOT NULL,
-        enabled INTEGER DEFAULT 1,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )`,
-
-      // Tabla de condiciones para activación automática
-      `CREATE TABLE IF NOT EXISTS conditions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        releId INTEGER NOT NULL,
-        condition_type TEXT NOT NULL,
-        value REAL NOT NULL,
-        duration INTEGER DEFAULT 15,
-        enabled INTEGER DEFAULT 1,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )`
     ];
 
@@ -224,10 +199,9 @@ class Database {
   saveSchedule(schedule) {
     return new Promise((resolve, reject) => {
       this.db.run(
-        `INSERT INTO schedules (rele_id, day_of_week, start_time, end_time, duration, is_active) 
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [schedule.rele_id, schedule.day_of_week, schedule.start_time, 
-         schedule.end_time, schedule.duration, schedule.is_active],
+        `INSERT INTO schedules (releId, time, duration, days, enabled) 
+         VALUES (?, ?, ?, ?, ?)`,
+        [schedule.releId, schedule.time, schedule.duration, schedule.days, schedule.enabled],
         function(err) {
           if (err) {
             reject(err);
@@ -245,7 +219,7 @@ class Database {
   getActiveSchedules() {
     return new Promise((resolve, reject) => {
       this.db.all(
-        'SELECT * FROM schedules WHERE is_active = 1 ORDER BY day_of_week, start_time',
+        'SELECT * FROM schedules WHERE enabled = 1 ORDER BY days, time',
         (err, rows) => {
           if (err) {
             reject(err);
@@ -263,10 +237,10 @@ class Database {
   saveCondition(condition) {
     return new Promise((resolve, reject) => {
       this.db.run(
-        `INSERT INTO conditions (rele_id, condition_type, threshold_value, operator, action, duration, is_active) 
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [condition.rele_id, condition.condition_type, condition.threshold_value,
-         condition.operator, condition.action, condition.duration, condition.is_active],
+        `INSERT INTO conditions (releId, condition_type, value, duration, enabled) 
+         VALUES (?, ?, ?, ?, ?)`,
+        [condition.releId, condition.condition_type, condition.value,
+         condition.duration, condition.enabled],
         function(err) {
           if (err) {
             reject(err);
@@ -284,7 +258,7 @@ class Database {
   getActiveConditions() {
     return new Promise((resolve, reject) => {
       this.db.all(
-        'SELECT * FROM conditions WHERE is_active = 1',
+        'SELECT * FROM conditions WHERE enabled = 1',
         (err, rows) => {
           if (err) {
             reject(err);
@@ -302,7 +276,7 @@ class Database {
   saveReleState(releId, state, reason = null) {
     return new Promise((resolve, reject) => {
       this.db.run(
-        'INSERT INTO rele_states (rele_id, state, reason) VALUES (?, ?, ?)',
+        'INSERT INTO rele_states (releId, state, reason) VALUES (?, ?, ?)',
         [releId, state, reason],
         function(err) {
           if (err) {
@@ -321,7 +295,7 @@ class Database {
   getLastReleState(releId) {
     return new Promise((resolve, reject) => {
       this.db.get(
-        'SELECT * FROM rele_states WHERE rele_id = ? ORDER BY timestamp DESC LIMIT 1',
+        'SELECT * FROM rele_states WHERE releId = ? ORDER BY timestamp DESC LIMIT 1',
         [releId],
         (err, row) => {
           if (err) {
